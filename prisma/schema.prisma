@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_PATH")
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  passkeys  Passkey[]
+  galleries Gallery[]
+  images    Image[]
+}
+
+model Passkey {
+  id            String   @id @default(cuid())
+  passkeyUserId String   @unique
+  name          String?
+  createdAt     DateTime @default(now())
+  publicKey     String
+  user          User     @relation(fields: [userId], references: [id])
+  userId        String
+  transports    String
+  counter       Int      @default(0)
+
+  @@unique([name, userId])
+}
+
+model Gallery {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isPublic  Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  images    Image[]
+}
+
+model Image {
+  id           String   @id @default(cuid())
+  storageKey   String   @unique
+  sha256Hash   String
+  thumbnailKey String   @unique
+  blurhash     String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  galleryId    String
+  gallery      Gallery  @relation(fields: [galleryId], references: [id])
+  width        Int
+  height       Int
+
+  @@unique([userId, sha256Hash])
+}
