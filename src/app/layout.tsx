@@ -48,7 +48,7 @@ export default function RootLayout({children,}: Readonly<{
                         <Link href="login"><Button>Login</Button></Link>
                     </div>
                 </div>
-                {children}
+                <div className="mt-16">{children}</div>
             </ConfigProvider>
         </body>
         </html>
