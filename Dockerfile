@@ -7,19 +7,18 @@ RUN apk add --no-cache git alpine-sdk
 RUN git clone https://github.com/nexryai/npmrun.git .
 RUN cargo build --release
 
-# baseステージをもとにbuilderステージを開始
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
 RUN corepack enable
-COPY package.json package-lock.json ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
 COPY . .
 
-RUN pnpn prisma generate
+RUN pnpm prisma generate
 RUN pnpm run build
 
 FROM node:22-alpine3.20 as prod_dependencies
@@ -35,13 +34,13 @@ FROM node:22-alpine AS runner
 ENV NODE_ENV=production
 RUN apk add --no-cache ca-certificates tini \
 	&& addgroup -g 720 app \
-	&& adduser -u 720 -G app -D -h /app app \
+	&& adduser -u 720 -G app -D -h /app app
 
 WORKDIR /app
 
 COPY --chown=app:app prisma ./prisma
 COPY --from=prod_dependencies /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/static ./.next/static
 
@@ -50,4 +49,4 @@ COPY --from=npmrun-builder /src/target/release/npmrun /usr/local/bin/npmrun
 
 USER app
 ENTRYPOINT ["/sbin/tini", "--"]
-CMD ["node", "server.js"]
+CMD ["npmrun", "docker:start"]
