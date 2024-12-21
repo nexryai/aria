@@ -1,4 +1,4 @@
-import { apiRouter as server } from "@/controllers/AppController";
+import { authRouter as server } from "@/controllers/AppController";
 
 
 export const GET = server.handle
