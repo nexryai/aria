@@ -59,7 +59,7 @@ const unsafeLoadSecretFromEnv = (): Buffer => {
     This class is designed to be stateless and does not depend on any external services.
     Tokens are encrypted with AES-256-GCM.
 */
-class AuthService {
+abstract class AuthService {
     private readonly secretKey = process.env.NODE_ENV === "development" ? unsafeLoadSecretFromEnv() : crypto.randomBytes(32);
     private readonly challengeSecretKey = crypto.randomBytes(32);
 
