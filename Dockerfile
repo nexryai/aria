@@ -22,7 +22,7 @@ COPY . .
 RUN pnpm prisma generate
 RUN pnpm run build
 
-FROM node:22-alpine3 as prod_dependencies
+FROM node:22-alpine as prod_dependencies
 RUN apk add --no-cache ca-certificates git libressl libressl-dev
 
 WORKDIR /app
