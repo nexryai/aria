@@ -1,13 +1,16 @@
 "use client";
 
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Avatar, Button, ConfigProvider } from "antd";
 import Link from "next/link";
-import { isSignedIn } from "@/browser/auth";
-import { UserOutlined } from "@ant-design/icons";
 import { useState } from "react";
+
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Button, ConfigProvider } from "antd";
+
+import { isSignedIn } from "@/browser/auth";
 import { isBrowser } from "@/env";
+
+import "./globals.css";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

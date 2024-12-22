@@ -1,9 +1,10 @@
 import { Elysia, error, t } from "elysia";
-import { UserService } from "@/services/UserService";
-import { PasskeyAuthService } from "@/services/AuthService";
-import { galleryRepository, passkeyRepository, userRepository } from "@/prisma";
-import { GalleryService } from "@/services/GalleryService";
+
 import { errorHandler } from "@/controllers/ErrorHandler";
+import { galleryRepository, passkeyRepository, userRepository } from "@/prisma";
+import { PasskeyAuthService } from "@/services/AuthService";
+import { GalleryService } from "@/services/GalleryService";
+import { UserService } from "@/services/UserService";
 
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);

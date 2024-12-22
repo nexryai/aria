@@ -1,6 +1,7 @@
 import { type IUserRepository } from "@/prisma";
 import { type User, Prisma } from "@prisma/client";
 
+
 export class UserService {
     constructor(
         private readonly userRepository: IUserRepository

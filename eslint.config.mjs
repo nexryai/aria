@@ -1,5 +1,6 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+
 import { FlatCompat } from "@eslint/eslintrc";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -17,6 +18,30 @@ const eslintConfig = [
             "indent": ["error", 4],
             "quotes": ["error", "double"],
             "semi": ["error", "always"],
+            "import/no-cycle": "error",
+            "import/order": [
+                "error",
+                {
+                    groups: ["builtin", "external", "parent", "sibling", "index", "object"],
+                    pathGroups: [
+                        {
+                            pattern: "{next,next/**,react,Elysia}",
+                            group: "builtin",
+                            position: "before",
+                        },
+                        {
+                            pattern: "{@/**,$lib/**,@prisma/client}",
+                            group: "parent",
+                            position: "before",
+                        },
+                    ],
+                    pathGroupsExcludedImportTypes: ["type"],
+                    alphabetize: {
+                        order: "asc",
+                    },
+                    "newlines-between": "always",
+                },
+            ],
         }
     },
     {

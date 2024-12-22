@@ -1,7 +1,9 @@
 "use client";
-import { app } from "@/browser/api";
 import { Dispatch, SetStateAction, useState } from "react";
+
 import { Button } from "antd";
+
+import { app } from "@/browser/api";
 
 const render = async (params: Promise<{ id: string }>, setText: Dispatch<SetStateAction<string>>) => {
     const id = (await params).id;

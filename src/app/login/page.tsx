@@ -1,8 +1,9 @@
 "use client";
 
-import { Button, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { startRegistration } from "@simplewebauthn/browser";
+import { Button, message } from "antd";
+
 import { signIn } from "@/browser/auth";
 
 export default function Page() {
