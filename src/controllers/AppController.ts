@@ -136,9 +136,11 @@ export const apiRouter = new Elysia({ prefix: "/api" })
         })
     })
 
-    .post("/", ({ body }) => body, {
-        body: t.Object({
-            name: t.String()
+    .get("/gallery/:id", async ({ params: { id } }) => {
+        return await galleryService.getGalleryById(id);
+    }, {
+        params: t.Object({
+            id: t.String()
         })
     });
 
