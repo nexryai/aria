@@ -22,7 +22,7 @@ export default function Page({params,}: {
     return (
         <>
             <div>My Post: {text}</div>
-            <Button type="primary">Reload</Button>
+            <Button type="primary">Upload</Button>
         </>
     );
 }
