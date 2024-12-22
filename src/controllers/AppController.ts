@@ -1,10 +1,12 @@
 import { Elysia, error, t } from "elysia";
 import { UserService } from "@/services/UserService";
 import { PasskeyAuthService } from "@/services/AuthService";
-import { passkeyRepository, userRepository } from "@/prisma";
+import { galleryRepository, passkeyRepository, userRepository } from "@/prisma";
+import { GalleryService } from "@/services/GalleryService";
 
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
+const galleryService = new GalleryService(galleryRepository);
 
 export const authRouter = new Elysia({ prefix: '/auth' })
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
@@ -109,18 +111,23 @@ export const apiRouter = new Elysia({ prefix: '/api' })
             return {
                 uid: user.uid,
             };
-        } catch {
+        } catch(e) {
+            console.error(e);
             return error(401, {
                 message: "Unauthorized",
                 uid: null,
             });
         }
     })
-    .get('/gallery/:id', ({ params, uid }) => `Elysia: ${params.id} UID:${uid.toUpperCase()}`, {
-        params: t.Object({
-            id: t.String()
+
+    .post('/gallery', async ({ body, uid }) => {
+        return await galleryService.createGallery(uid, body.name);
+    }, {
+        body: t.Object({
+            name: t.String()
         })
     })
+
     .post('/', ({ body }) => body, {
         body: t.Object({
             name: t.String()

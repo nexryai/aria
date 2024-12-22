@@ -2,12 +2,28 @@
 import Image from "next/image";
 import { isSignedIn } from "@/browser/auth";
 import { useState } from "react";
+import { isBrowser } from "@/env";
+import { Button, Drawer, Input } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import { app } from "@/browser/api";
 
 export default function Home() {
     const [signedIn, setSignedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const [addGalleryDrawerIsOpen, setAddGalleryDrawerIsOpen] = useState(false);
 
-    isSignedIn().then((signedIn) => {
+    const addGallery = async () => {
+        const name = (document.getElementById("new-gallery-name") as HTMLInputElement).value;
+        const res = await app.api.gallery.post({name});
+        if (res.response.ok) {
+            setAddGalleryDrawerIsOpen(false);
+            location.reload()
+        } else {
+            console.error(res.error);
+        }
+    };
+
+    isBrowser && isSignedIn().then((signedIn) => {
         setSignedIn(signedIn);
         setIsLoading(false);
     })
@@ -29,8 +45,17 @@ export default function Home() {
                 </div>
             }
             {!isLoading && signedIn &&
-                <p>todo</p>
+                <div className="flex justify-between">
+                    <span className="text-xl">Gallery</span>
+                    <Button icon={<PlusOutlined />} onClick={() => setAddGalleryDrawerIsOpen(true)} type="default">Add</Button>
+                </div>
             }
+            <Drawer title="Add gallery" onClose={() => {setAddGalleryDrawerIsOpen(false)}} open={addGalleryDrawerIsOpen}>
+                <Input id="new-gallery-name" placeholder="name"/>
+                <div className="flex justify-end mt-4">
+                    <Button onClick={addGallery} icon={<PlusOutlined />} type="primary">Create</Button>
+                </div>
+            </Drawer>
         </div>
     );
 }

@@ -13,3 +13,6 @@ export type IPasskeyRepository = typeof passkeyRepository
 
 export const userRepository = prisma.user;
 export type IUserRepository = typeof userRepository
+
+export const galleryRepository = prisma.gallery;
+export type IGalleryRepository = typeof galleryRepository
