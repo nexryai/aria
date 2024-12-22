@@ -7,8 +7,20 @@ export class GalleryService {
         private readonly galleryRepository: IGalleryRepository
     ) {}
 
-    public async getGalleryById(gid: string): Promise<Gallery | null> {
-        return this.galleryRepository.findUnique({ where: { id: gid } });
+    public async getGalleryById(gid: string, offset: number): Promise<Gallery | null> {
+        return this.galleryRepository.findUnique(
+            {
+                where: {
+                    id: gid
+                },
+                include: {
+                    images: {
+                        skip: offset,
+                        take: 20
+                    }
+                }
+            }
+        );
     }
 
     public async getGalleriesByUserId(uid: string): Promise<GallerySummary[]> {

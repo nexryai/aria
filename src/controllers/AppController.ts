@@ -136,11 +136,14 @@ export const apiRouter = new Elysia({ prefix: "/api" })
         })
     })
 
-    .get("/gallery/:id", async ({ params: { id } }) => {
-        return await galleryService.getGalleryById(id);
+    .get("/gallery/:id", async ({ params: { id }, query: { offset } }) => {
+        return await galleryService.getGalleryById(id, offset ?? 0);
     }, {
         params: t.Object({
             id: t.String()
+        }),
+        query: t.Object({
+            offset: t.Optional(t.Number())
         })
     });
 
