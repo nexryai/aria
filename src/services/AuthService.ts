@@ -36,12 +36,31 @@ interface ChallengeTokenClaims extends TokenClaims {
 }
 
 /*
+    DO NOT USE THIS FUNCTION IN PRODUCTION.
+    NextJSのホットリロードが走るとシークレットがリセットされてAPIが呼び出せなくなる。
+    これを防止するために、開発環境でのみ環境変数からシークレットを読み込むようにする。
+    安全性が低いので、本番環境では絶対に使用しないこと。
+ */
+const unsafeLoadSecretFromEnv = (): Buffer => {
+    if (process.env.NODE_ENV !== "development") {
+        throw new Error("Loading secret from environment variables is only available in development mode.");
+    }
+
+    const secret = process.env["UNSAFE_SECRET_KEY_DO_NOT_USE_IN_PRODUCTION"];
+    if (!secret) {
+        throw new Error(`Environment variable UNSAFE_SECRET_KEY_DO_NOT_USE_IN_PRODUCTION is not set.`);
+    }
+
+    return Buffer.from(secret, "base64");
+}
+
+/*
     AuthService provides methods to generate and verify tokens for authentication and challenge.
     This class is designed to be stateless and does not depend on any external services.
     Tokens are encrypted with AES-256-GCM.
 */
 class AuthService {
-    private readonly secretKey = crypto.randomBytes(32);
+    private readonly secretKey = process.env.NODE_ENV === "development" ? unsafeLoadSecretFromEnv() : crypto.randomBytes(32);
     private readonly challengeSecretKey = crypto.randomBytes(32);
 
     private encrypt(data: string, key: Buffer): string {

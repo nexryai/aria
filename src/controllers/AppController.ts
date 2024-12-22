@@ -3,12 +3,14 @@ import { UserService } from "@/services/UserService";
 import { PasskeyAuthService } from "@/services/AuthService";
 import { galleryRepository, passkeyRepository, userRepository } from "@/prisma";
 import { GalleryService } from "@/services/GalleryService";
+import { errorHandler } from "@/controllers/ErrorHandler";
 
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
 const galleryService = new GalleryService(galleryRepository);
 
 export const authRouter = new Elysia({ prefix: '/auth' })
+    .use(errorHandler)
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
         const user = await userService.createUser({name: body.displayName});
         const res = await passkeyAuthService.genRegisterChallenge(user.id, body.displayName);
@@ -93,6 +95,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
 
 
 export const apiRouter = new Elysia({ prefix: '/api' })
+    .use(errorHandler)
     .derive(({ cookie: {token} }) => {
         // Auth middleware
         if (!token || !token.value) {
