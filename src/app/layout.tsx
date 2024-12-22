@@ -2,13 +2,12 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, ConfigProvider } from "antd";
 
 import { isSignedIn } from "@/browser/auth";
-import { isBrowser } from "@/env";
 
 import "./globals.css";
 
@@ -27,8 +26,10 @@ export default function RootLayout({children,}: Readonly<{
 }>) {
     const [signedIn, setSignedIn] = useState(false);
 
-    isBrowser && isSignedIn().then((signedIn) => {
-        setSignedIn(signedIn);
+    useEffect(() => {
+        isSignedIn().then((signedIn) => {
+            setSignedIn(signedIn);
+        });
     });
 
     return (

@@ -1,27 +1,28 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "antd";
 
 import { app } from "@/browser/api";
 
-const render = async (params: Promise<{ id: string }>, setText: Dispatch<SetStateAction<string>>) => {
-    const id = (await params).id;
-    const { data } = await app.api.gallery({id}).get();
-    setText(data as string);
-};
-
 export default function Page({params,}: {
     params: Promise<{ id: string }>
 }) {
     const [text, setText] = useState("");
-    render(params, setText).catch(console.error);
+    const fetchGallery = async () => {
+        const id = (await params).id;
+        const { data } = await app.api.gallery({id}).get();
+        setText(JSON.stringify(data));
+    };
 
-    const reload = () => render(params, setText);
+    useEffect(() => {
+        fetchGallery();
+    });
+
     return (
         <>
             <div>My Post: {text}</div>
-            <Button type="primary" onClick={reload}>Reload</Button>
+            <Button type="primary">Reload</Button>
         </>
     );
 }

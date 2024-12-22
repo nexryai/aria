@@ -1,4 +1,5 @@
 import { type IGalleryRepository } from "@/prisma";
+import { GallerySummary } from "@/schema/api";
 import { type Gallery } from "@prisma/client";
 
 export class GalleryService {
@@ -10,8 +11,25 @@ export class GalleryService {
         return this.galleryRepository.findUnique({ where: { id: gid } });
     }
 
-    public getGalleriesByUserId(uid: string): Promise<Gallery[]> {
-        return this.galleryRepository.findMany({ where: { userId: uid } });
+    public async getGalleriesByUserId(uid: string): Promise<GallerySummary[]> {
+        const galleries =  await this.galleryRepository.findMany(
+            {
+                where: { userId: uid },
+                include: {
+                    images: {
+                        take: 1
+                    }
+                }
+            }
+        );
+
+        return await Promise.all(galleries.map(async (gallery) => {
+            return {
+                ...gallery,
+                images: null,
+                thumbnail: gallery.images[0]?.storageKey ?? "/placeholder.png"
+            };
+        }));
     }
 
     public createGallery(uid: string, name: string): Promise<Gallery> {
