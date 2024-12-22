@@ -123,6 +123,10 @@ export const apiRouter = new Elysia({ prefix: '/api' })
         }
     })
 
+    .get('/gallery', async ({ uid }) => {
+        return await galleryService.getGalleriesByUserId(uid);
+    })
+
     .post('/gallery', async ({ body, uid }) => {
         return await galleryService.createGallery(uid, body.name);
     }, {
