@@ -64,32 +64,45 @@ class AuthService {
     private readonly challengeSecretKey = crypto.randomBytes(32);
 
     private encrypt(data: string, key: Buffer): string {
-        const iv = crypto.randomBytes(12);
-        const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+        const iv = crypto.randomBytes(16); // CBCでは16バイトのIVが必要
+        const cipher = crypto.createCipheriv("aes-256-cbc", key, iv);
 
-        const enc1 = cipher.update(data, "utf8");
-        const enc2 = cipher.final();
-        return Buffer.concat([enc1, enc2, iv, cipher.getAuthTag()]).toString("base64");
+        // 暗号化
+        const encryptedData = Buffer.concat([cipher.update(data, "utf8"), cipher.final()]);
+
+        // HMAC-SHA384で認証タグを生成
+        const hmac = crypto.createHmac("sha384", key);
+        hmac.update(iv); // IVもHMACに含める
+        hmac.update(encryptedData);
+        const authTag = hmac.digest();
+
+        // 結果を結合してBase64エンコード
+        return Buffer.concat([iv, encryptedData, authTag]).toString("base64");
     }
 
     private decrypt(encryptedData: string, key: Buffer): string {
         const dataBuffer = Buffer.from(encryptedData, "base64");
 
-        const ivStart: number = dataBuffer.length - 28;
-        const ivEnd: number = dataBuffer.length - 16;
-        const authTagStart: number = dataBuffer.length - 16;
+        // データの分割
+        const iv = dataBuffer.subarray(0, 16); // 最初の16バイトはIV
+        const authTag = dataBuffer.subarray(-48); // 最後の48バイトはHMAC-SHA384
+        const encryptedText = dataBuffer.subarray(16, -48); // 残りが暗号化データ
 
-        const iv = dataBuffer.slice(ivStart, ivEnd);
-        const authTag = dataBuffer.slice(authTagStart);
-        const encryptedText = dataBuffer.slice(0, ivStart);
+        // HMACの検証
+        const hmac = crypto.createHmac("sha384", key);
+        hmac.update(iv);
+        hmac.update(encryptedText);
+        const calculatedAuthTag = hmac.digest();
 
-        const decipher = crypto.createDecipheriv("aes-256-gcm", key, iv);
-        decipher.setAuthTag(authTag);
+        if (!crypto.timingSafeEqual(authTag, calculatedAuthTag)) {
+            throw new Error("Authentication failed");
+        }
 
-        const dec1 = decipher.update(encryptedText);
-        const dec2 = decipher.final();
+        // 復号化
+        const decipher = crypto.createDecipheriv("aes-256-cbc", key, iv);
+        const decryptedData = Buffer.concat([decipher.update(encryptedText), decipher.final()]);
 
-        return Buffer.concat([dec1, dec2]).toString("utf8");
+        return decryptedData.toString("utf8");
     }
 
     /***
