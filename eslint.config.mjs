@@ -14,6 +14,9 @@ const eslintConfig = [
     {
         rules: {
             "@typescript-eslint/no-unused-expressions": ["off"],
+            "indent": ["error", 4],
+            "quotes": ["error", "double"],
+            "semi": ["error", "always"],
         }
     },
     {

@@ -48,11 +48,11 @@ const unsafeLoadSecretFromEnv = (): Buffer => {
 
     const secret = process.env["UNSAFE_SECRET_KEY_DO_NOT_USE_IN_PRODUCTION"];
     if (!secret) {
-        throw new Error(`Environment variable UNSAFE_SECRET_KEY_DO_NOT_USE_IN_PRODUCTION is not set.`);
+        throw new Error("Environment variable UNSAFE_SECRET_KEY_DO_NOT_USE_IN_PRODUCTION is not set.");
     }
 
     return Buffer.from(secret, "base64");
-}
+};
 
 /*
     AuthService provides methods to generate and verify tokens for authentication and challenge.

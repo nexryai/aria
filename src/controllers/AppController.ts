@@ -9,7 +9,7 @@ const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
 const galleryService = new GalleryService(galleryRepository);
 
-export const authRouter = new Elysia({ prefix: '/auth' })
+export const authRouter = new Elysia({ prefix: "/auth" })
     .use(errorHandler)
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
         const user = await userService.createUser({name: body.displayName});
@@ -91,10 +91,10 @@ export const authRouter = new Elysia({ prefix: '/auth' })
         return {
             loggedOut: true
         };
-    })
+    });
 
 
-export const apiRouter = new Elysia({ prefix: '/api' })
+export const apiRouter = new Elysia({ prefix: "/api" })
     .use(errorHandler)
     .derive(({ cookie: {token} }) => {
         // Auth middleware
@@ -123,11 +123,11 @@ export const apiRouter = new Elysia({ prefix: '/api' })
         }
     })
 
-    .get('/gallery', async ({ uid }) => {
+    .get("/gallery", async ({ uid }) => {
         return await galleryService.getGalleriesByUserId(uid);
     })
 
-    .post('/gallery', async ({ body, uid }) => {
+    .post("/gallery", async ({ body, uid }) => {
         return await galleryService.createGallery(uid, body.name);
     }, {
         body: t.Object({
@@ -135,11 +135,11 @@ export const apiRouter = new Elysia({ prefix: '/api' })
         })
     })
 
-    .post('/', ({ body }) => body, {
+    .post("/", ({ body }) => body, {
         body: t.Object({
             name: t.String()
         })
-    })
+    });
 
 
 export type IElysiaApp = typeof apiRouter;

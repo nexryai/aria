@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Image from "next/image";
 import { isSignedIn } from "@/browser/auth";
 import { useState } from "react";
@@ -17,7 +17,7 @@ export default function Home() {
         const res = await app.api.gallery.post({name});
         if (res.response.ok) {
             setAddGalleryDrawerIsOpen(false);
-            location.reload()
+            location.reload();
         } else {
             console.error(res.error);
         }
@@ -26,7 +26,7 @@ export default function Home() {
     isBrowser && isSignedIn().then((signedIn) => {
         setSignedIn(signedIn);
         setIsLoading(false);
-    })
+    });
 
     return (
         <div className="w-[80%] mx-auto">
@@ -50,7 +50,7 @@ export default function Home() {
                     <Button icon={<PlusOutlined />} onClick={() => setAddGalleryDrawerIsOpen(true)} type="default">Add</Button>
                 </div>
             }
-            <Drawer title="Add gallery" onClose={() => {setAddGalleryDrawerIsOpen(false)}} open={addGalleryDrawerIsOpen}>
+            <Drawer title="Add gallery" onClose={() => {setAddGalleryDrawerIsOpen(false);}} open={addGalleryDrawerIsOpen}>
                 <Input id="new-gallery-name" placeholder="name"/>
                 <div className="flex justify-end mt-4">
                     <Button onClick={addGallery} icon={<PlusOutlined />} type="primary">Create</Button>

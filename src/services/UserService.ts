@@ -15,8 +15,8 @@ export class UserService {
 
     public getUserById(uid: string): Promise<User | null> {
         return this.userRepository.findUnique({ where: {
-                id: uid
-            }});
+            id: uid
+        }});
     }
 
     public createUser(data: Prisma.UserCreateInput): Promise<User> {
