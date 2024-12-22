@@ -15,6 +15,9 @@ const eslintConfig = [
         rules: {
             "@typescript-eslint/no-unused-expressions": ["off"],
         }
+    },
+    {
+        ignores: ["src/wasm/pkg/*", ".next/*", "node_modules/*"],
     }
 ];
 

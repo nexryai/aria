@@ -1,5 +1,5 @@
 import { type IGalleryRepository } from "@/prisma";
-import { type Gallery, Prisma } from "@prisma/client";
+import { type Gallery } from "@prisma/client";
 
 export class GalleryService {
     constructor(
