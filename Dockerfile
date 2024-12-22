@@ -8,6 +8,7 @@ RUN git clone https://github.com/nexryai/npmrun.git .
 RUN cargo build --release
 
 FROM node:22-alpine AS builder
+RUN apk add --no-cache ca-certificates git libressl libressl-dev cargo alpine-sdk g++ build-base cmake clang
 
 WORKDIR /app
 
@@ -21,7 +22,7 @@ COPY . .
 RUN pnpm prisma generate
 RUN pnpm run build
 
-FROM node:22-alpine3.20 as prod_dependencies
+FROM node:22-alpine3 as prod_dependencies
 RUN apk add --no-cache ca-certificates git libressl libressl-dev
 
 WORKDIR /app
