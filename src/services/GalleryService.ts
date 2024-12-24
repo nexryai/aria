@@ -1,3 +1,5 @@
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
+
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -14,7 +16,8 @@ export class GalleryService {
         private readonly imageRepository: IImageRepository,
         private readonly s3Client: S3Client,
     ) {
-        const bucket = process.env.S3_BUCKET;
+        const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
+        const bucket = loadEnv? process.env.S3_BUCKET : "DUMMY";
         if (!bucket) {
             throw new Error("Invalid configuration");
         }
