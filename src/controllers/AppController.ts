@@ -1,4 +1,5 @@
 import { Elysia, error, t } from "elysia";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 
 import { S3Client } from "@aws-sdk/client-s3";
 
@@ -8,11 +9,14 @@ import { PasskeyAuthService } from "@/services/AuthService";
 import { GalleryService } from "@/services/GalleryService";
 import { UserService } from "@/services/UserService";
 
-const s3Endpoint = process.env.S3_ENDPOINT;
-const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID;
-const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
 
-if (!s3AccessKeyId || !s3SecretAccessKey) {
+// Nextのプロダクションビルドでコケる対策
+const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
+const s3Endpoint = !loadEnv ? process.env.S3_ENDPOINT : "DUMMY";
+const s3AccessKeyId = !loadEnv ? process.env.S3_ACCESS_KEY_ID : "DUMMY";
+const s3SecretAccessKey = !loadEnv ? process.env.S3_SECRET_ACCESS_KEY : "DUMMY";
+
+if (!s3Endpoint || !s3AccessKeyId || !s3SecretAccessKey) {
     throw new Error("Invalid configuration");
 }
 
