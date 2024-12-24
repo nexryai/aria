@@ -12,12 +12,14 @@ import { Button } from "antd";
 import { AnimatePresence, motion } from "motion/react";
 import { useDropzone } from "react-dropzone";
 
+import { app } from "@/browser/api";
 import initWasm, { get_image_props } from "@/wasm/pkg";
 
 
 export default function Page({params,}: {
     params: Promise<{ id: string }>
 }) {
+    const [thumbnailWorker, setThumbnailWorker] = useState<Worker>();
     const [wasmInitialized, setWasmInitialized] = useState(false);
     const [galleryId, setGalleryId] = useState("");
     const [uploadQueue, setUploadQueue] = useState<
@@ -41,11 +43,13 @@ export default function Page({params,}: {
 
         if (!wasmInitialized) {
             initWasm().then(() => {
+                setThumbnailWorker(new Worker(new URL("@/browser/worker/thumbnail", import.meta.url)));
+
                 console.log("WASM initialized");
                 setWasmInitialized(true);
             });
         }
-    });
+    }, [params]);
 
     const { getRootProps, getInputProps } = useDropzone({
         onDrop: (acceptedFiles, fileRejections) => {
@@ -66,8 +70,24 @@ export default function Page({params,}: {
         },
     });
 
+    const waitForThumbnail = (worker: Worker, file: Uint8Array): Promise<Blob> => {
+        return new Promise((resolve, reject) => {
+            worker.postMessage({ file });
+
+            worker.onmessage = (e: MessageEvent) => {
+                const { success, blob, error } = e.data;
+
+                if (success && blob) {
+                    resolve(blob); //サムネイルのBlobを返す
+                } else {
+                    reject(error);
+                }
+            };
+        });
+    };
+
     const processUpload = async () => {
-        if (!wasmInitialized) {
+        if (!wasmInitialized || !thumbnailWorker) {
             return;
         }
 
@@ -77,33 +97,75 @@ export default function Page({params,}: {
 
             reader.onload = async () => {
                 try {
-                    const result = new Uint8Array(reader.result as ArrayBuffer);
+                    const imageBuffer = new Uint8Array(reader.result as ArrayBuffer);
                     const imageProps: {
                         width: number;
                         height: number;
                         blurhash: string;
-                        sha256: string;
-                    } = await get_image_props(result);
+                        checksum: string;
+                    } = await get_image_props(imageBuffer);
 
-                    console.log(galleryId, imageProps);
+                    const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
+                        sha256Hash: imageProps.checksum,
+                        blurhash: imageProps.blurhash,
+                        width: imageProps.width,
+                        height: imageProps.height,
+                    });
 
-                    const responseCode = 200;
-                    if (responseCode === 200) {
-                        setUploadedFiles((prev) => [...prev, { name: currentFile.name }]);
-                    } else if (responseCode === 409) {
-                        setFailedFiles((prev) => [
-                            ...prev,
-                            { name: currentFile.name, reason: "The same file already exists." },
-                        ]);
-                    } else {
+                    if (!signedUrls.response.ok) {
+                        if (signedUrls.response.status === 409) {
+                            setFailedFiles((prev) => [
+                                ...prev,
+                                { name: currentFile.name, reason: "The same file already exists." },
+                            ]);
+
+                            return;
+                        } else {
+                            throw new Error("Failed to get signed URLs");
+                        }
+                    }
+
+                    const { imageUploadUrl, thumbnailUploadUrl }: { imageUploadUrl: string, thumbnailUploadUrl: string } = signedUrls.data;
+
+                    // PUT request to signedUrl
+                    const imageUploadResponse = await fetch(imageUploadUrl, {
+                        method: "PUT",
+                        body: imageBuffer,
+                    });
+
+                    if (!imageUploadResponse.ok) {
                         setFailedFiles((prev) => [
                             ...prev,
                             {
                                 name: currentFile.name,
-                                reason: `Server response code was ${responseCode}`,
+                                reason: `Failed to upload image. Response code was ${imageUploadResponse.status}`,
                             },
                         ]);
+
+                        return;
                     }
+
+                    // Create thumbnail
+                    const thumbnailBlob = await waitForThumbnail(thumbnailWorker, imageBuffer);
+                    const thumbnailUploadResponse = await fetch(thumbnailUploadUrl, {
+                        method: "PUT",
+                        body: await thumbnailBlob.arrayBuffer(),
+                    });
+
+                    if (!thumbnailUploadResponse.ok) {
+                        setFailedFiles((prev) => [
+                            ...prev,
+                            {
+                                name: currentFile.name,
+                                reason: `Failed to upload thumbnail. Response code was ${thumbnailUploadResponse.status}`,
+                            },
+                        ]);
+
+                        return;
+                    }
+
+                    // ここまで来たら成功
+                    setUploadedFiles((prev) => [...prev, { name: currentFile.name }]);
                 } catch (e) {
                     setFailedFiles((prev) => [
                         ...prev,
@@ -122,8 +184,6 @@ export default function Page({params,}: {
             };
 
             console.log(`Processing ${currentFile.name}`);
-            console.log(failedFiles);
-
             reader.readAsArrayBuffer(currentFile.file);
             await new Promise((resolve) => setTimeout(resolve, 100)); // Sleep for 100ms
         }
