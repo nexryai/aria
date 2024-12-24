@@ -13,12 +13,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { useDropzone } from "react-dropzone";
 
 import { app } from "@/browser/api";
+import { isSafari } from "@/browser/env";
 import initWasm, { get_image_props } from "@/wasm/pkg";
 
 
 export default function Page({params,}: {
     params: Promise<{ id: string }>
 }) {
+    const isSupportedBrowser = !isSafari();
     const [thumbnailWorker, setThumbnailWorker] = useState<Worker>();
     const [wasmInitialized, setWasmInitialized] = useState(false);
     const [galleryId, setGalleryId] = useState("");
@@ -202,7 +204,7 @@ export default function Page({params,}: {
 
     return (
         <div className="w-[80%] mx-auto">
-            <div className="flex justify-between">
+            <div className={`${isSupportedBrowser ? "flex justify-between " : "hidden"}`}>
                 <div className="mr-16">
                     <div className="mt-8 mb-8 p-16 border rounded-lg" {...getRootProps()}>
                         <input {...getInputProps()} />
@@ -271,6 +273,12 @@ export default function Page({params,}: {
                     </AnimatePresence>
                 </div>
             </div>
+            {!isSupportedBrowser && (
+                <div className="mt-48">
+                    <p>Sorry, Uploading images from Safari is not supported because it does not support WebP in <code>offscreenCanvas.convertToBlob()</code>.</p>
+                    <p>Please use another browser.</p>
+                </div>
+            )}
         </div>
     );
 }
