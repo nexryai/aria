@@ -1,17 +1,33 @@
-import { type IGalleryRepository } from "@/prisma";
+import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
+import { type IGalleryRepository, IImageRepository } from "@/prisma";
 import { GallerySummary } from "@/schema/api";
 import { type Gallery } from "@prisma/client";
 
-export class GalleryService {
-    constructor(
-        private readonly galleryRepository: IGalleryRepository
-    ) {}
 
-    public async getGalleryById(gid: string, offset: number): Promise<Gallery | null> {
-        return this.galleryRepository.findUnique(
+export class GalleryService {
+    private readonly objectStorageBucket: string;
+
+    constructor(
+        private readonly galleryRepository: IGalleryRepository,
+        private readonly imageRepository: IImageRepository,
+        private readonly s3Client: S3Client,
+    ) {
+        const bucket = process.env.S3_BUCKET;
+        if (!bucket) {
+            throw new Error("Invalid configuration");
+        }
+
+        this.objectStorageBucket = bucket;
+    }
+
+    public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<Gallery | null> {
+        const found = await this.galleryRepository.findUnique(
             {
                 where: {
-                    id: gid
+                    id: galleryId,
+                    userId: uid
                 },
                 include: {
                     images: {
@@ -21,6 +37,17 @@ export class GalleryService {
                 }
             }
         );
+
+        if (!found) {
+            return null;
+        }
+
+        // WHEREでuserIdを指定しているものの、バグか何かで渡されるUIDがundefinedになってたりすると他人のギャラリーが見れてしまうので一応チェック
+        if (found.userId !== uid) {
+            throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+        }
+
+        return found;
     }
 
     public async getGalleriesByUserId(uid: string): Promise<GallerySummary[]> {
@@ -36,6 +63,10 @@ export class GalleryService {
         );
 
         return await Promise.all(galleries.map(async (gallery) => {
+            if (gallery.userId !== uid) {
+                throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+            }
+
             return {
                 ...gallery,
                 images: null,
@@ -53,5 +84,77 @@ export class GalleryService {
                 }
             }
         });
+    }
+
+    public async getSignedImageUrl(uid: string, key: string, isThumbnail: boolean): Promise<string | null> {
+        const found = await this.imageRepository.findUnique({
+            where:
+                isThumbnail ? {
+                    thumbnailKey: key,
+                    userId: uid
+                }: {
+                    storageKey: key,
+                    userId: uid
+                }
+        });
+
+        if (!found) {
+            return null;
+        }
+
+        if (found.userId !== uid) {
+            throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+        }
+
+        return await getSignedUrl(this.s3Client, new GetObjectCommand({
+            Bucket: this.objectStorageBucket,
+            Key: key
+        }));
+    }
+
+    public async getSingedUploadUrl(galleryId: string, uid: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
+        const storageKey = crypto.randomUUID();
+        const thumbnailKey = crypto.randomUUID();
+
+        const image = await this.imageRepository.create({
+            data: {
+                storageKey: storageKey,
+                thumbnailKey: thumbnailKey,
+                blurhash: blurhash,
+                width: width,
+                height: height,
+                sha256Hash: sha256Hash,
+                gallery: {
+                    connect: {
+                        id: galleryId,
+                        userId: uid
+                    }
+                },
+                user: {
+                    connect: {
+                        id: uid
+                    }
+                }
+            }
+        });
+
+        if (image.userId !== uid) {
+            await this.imageRepository.delete({where: {id: image.id}});
+            throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+        }
+
+        const imageUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
+            Bucket: this.objectStorageBucket,
+            Key: storageKey,
+            ACL: "private",
+        }), {expiresIn: 60 * 60});
+
+        const thumbnailUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
+            Bucket: this.objectStorageBucket,
+            Key: thumbnailKey,
+            ACL: "private",
+        }), {expiresIn: 60 * 60});
+
+        return {imageUploadUrl, thumbnailUploadUrl};
     }
 }

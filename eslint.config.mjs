@@ -26,7 +26,7 @@ const eslintConfig = [
                     groups: ["builtin", "external", "parent", "sibling", "index", "object"],
                     pathGroups: [
                         {
-                            pattern: "{next,next/**,react,Elysia}",
+                            pattern: "{next,next/**,react,elysia}",
                             group: "builtin",
                             position: "before",
                         },

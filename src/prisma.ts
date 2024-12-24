@@ -16,3 +16,6 @@ export type IUserRepository = typeof userRepository
 
 export const galleryRepository = prisma.gallery;
 export type IGalleryRepository = typeof galleryRepository
+
+export const imageRepository = prisma.image;
+export type IImageRepository = typeof imageRepository

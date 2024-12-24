@@ -1,14 +1,32 @@
 import { Elysia, error, t } from "elysia";
 
+import { S3Client } from "@aws-sdk/client-s3";
+
 import { errorHandler } from "@/controllers/ErrorHandler";
-import { galleryRepository, passkeyRepository, userRepository } from "@/prisma";
+import { galleryRepository, imageRepository, passkeyRepository, userRepository } from "@/prisma";
 import { PasskeyAuthService } from "@/services/AuthService";
 import { GalleryService } from "@/services/GalleryService";
 import { UserService } from "@/services/UserService";
 
+const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID;
+const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
+
+if (!s3AccessKeyId || !s3SecretAccessKey) {
+    throw new Error("Invalid configuration");
+}
+
+const s3 = new S3Client({
+    region: "auto",
+    endpoint: "",
+    credentials: {
+        accessKeyId: s3AccessKeyId,
+        secretAccessKey: s3SecretAccessKey
+    }
+});
+
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
-const galleryService = new GalleryService(galleryRepository);
+const galleryService = new GalleryService(galleryRepository, imageRepository, s3);
 
 export const authRouter = new Elysia({ prefix: "/auth" })
     .use(errorHandler)
@@ -136,14 +154,35 @@ export const apiRouter = new Elysia({ prefix: "/api" })
         })
     })
 
-    .get("/gallery/:id", async ({ params: { id }, query: { offset } }) => {
-        return await galleryService.getGalleryById(id, offset ?? 0);
+    .get("/gallery/:id", async ({ uid, params: { id }, query: { offset } }) => {
+        return await galleryService.getGalleryById(id, uid, offset ?? 0);
     }, {
         params: t.Object({
             id: t.String()
         }),
         query: t.Object({
             offset: t.Optional(t.Number())
+        })
+    })
+
+    .post("/gallery/:id/upload", async ({ uid, params: { id }, body }) => {
+        return await galleryService.getSingedUploadUrl(
+            id,
+            uid,
+            body.sha256Hash,
+            body.blurhash,
+            body.width,
+            body.height
+        );
+    }, {
+        params: t.Object({
+            id: t.String()
+        }),
+        body: t.Object({
+            sha256Hash: t.String(),
+            blurhash: t.String(),
+            width: t.Number(),
+            height: t.Number(),
         })
     });
 
