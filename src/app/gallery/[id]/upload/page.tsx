@@ -12,7 +12,7 @@ import { Button } from "antd";
 import { AnimatePresence, motion } from "motion/react";
 import { useDropzone } from "react-dropzone";
 
-import initWasm, { upload_file } from "@/wasm/pkg";
+import initWasm, { get_image_props } from "@/wasm/pkg";
 
 
 export default function Page({params,}: {
@@ -78,8 +78,16 @@ export default function Page({params,}: {
             reader.onload = async () => {
                 try {
                     const result = new Uint8Array(reader.result as ArrayBuffer);
-                    const responseCode = await upload_file(galleryId, result);
+                    const imageProps: {
+                        width: number;
+                        height: number;
+                        blurhash: string;
+                        sha256: string;
+                    } = await get_image_props(result);
 
+                    console.log(galleryId, imageProps);
+
+                    const responseCode = 200;
                     if (responseCode === 200) {
                         setUploadedFiles((prev) => [...prev, { name: currentFile.name }]);
                     } else if (responseCode === 409) {

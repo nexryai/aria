@@ -1,4 +1,4 @@
-pub mod upload;
+pub mod props;
 pub mod render;
 mod thumb;
 mod enc;

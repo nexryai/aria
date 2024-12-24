@@ -19,7 +19,7 @@ pub struct UploadResult {
 }
 
 #[wasm_bindgen]
-pub async fn upload_file(data: Vec<u8>) -> JsValue {
+pub async fn get_image_props(data: Vec<u8>) -> JsValue {
     // Get checksum
     let sha256_hash = hash_vec_to_string(&data);
 
