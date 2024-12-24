@@ -8,6 +8,7 @@ import { PasskeyAuthService } from "@/services/AuthService";
 import { GalleryService } from "@/services/GalleryService";
 import { UserService } from "@/services/UserService";
 
+const s3Endpoint = process.env.S3_ENDPOINT;
 const s3AccessKeyId = process.env.S3_ACCESS_KEY_ID;
 const s3SecretAccessKey = process.env.S3_SECRET_ACCESS_KEY;
 
@@ -17,11 +18,11 @@ if (!s3AccessKeyId || !s3SecretAccessKey) {
 
 const s3 = new S3Client({
     region: "auto",
-    endpoint: "",
+    endpoint: s3Endpoint,
     credentials: {
         accessKeyId: s3AccessKeyId,
         secretAccessKey: s3SecretAccessKey
-    }
+    },
 });
 
 const userService = new UserService(userRepository);
