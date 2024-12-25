@@ -64,9 +64,9 @@ export default function Page({params,}: {
                 </Link>
             </div>
 
-            <div className="mt-8 flex flex-wrap justify-center">
+            <div className="mt-8 flex flex-wrap justify-center gap-1">
                 {gallery ? gallery.images.map((image) => (
-                    <div key={image.id} className="relative w-32 h-32 overflow-hidden m-1">
+                    <div key={image.id} className="relative w-32 h-32 overflow-hidden">
                         <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
 
                         <motion.div
