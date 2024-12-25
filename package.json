@@ -25,6 +25,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "antd": "^5.22.5",
+    "blurhash": "^2.0.5",
     "elysia": "^1.1.26",
     "eslint": "^9",
     "eslint-config-next": "15.1.2",

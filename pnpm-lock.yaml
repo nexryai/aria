@@ -46,6 +46,9 @@ devDependencies:
   antd:
     specifier: ^5.22.5
     version: 5.22.5(react-dom@19.0.0)(react@19.0.0)
+  blurhash:
+    specifier: ^2.0.5
+    version: 2.0.5
   elysia:
     specifier: ^1.1.26
     version: 1.1.26(@sinclair/typebox@0.34.13)(typescript@5.7.2)
@@ -2452,6 +2455,10 @@ packages:
       tar: 6.2.1
     transitivePeerDependencies:
       - debug
+    dev: true
+
+  /blurhash@2.0.5:
+    resolution: {integrity: sha512-cRygWd7kGBQO3VEhPiTgq4Wc43ctsM+o46urrmPOiuAe+07fzlSB9OJVdpgDL0jPqXUVQ9ht7aq7kxOeJHRK+w==}
     dev: true
 
   /bowser@2.11.0:
