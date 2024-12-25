@@ -109,7 +109,7 @@ export class GalleryService {
             throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
         }
 
-        return await getSignedUrl(this.s3Client, new GetObjectCommand({
+        return getSignedUrl(this.s3Client, new GetObjectCommand({
             Bucket: this.objectStorageBucket,
             Key: key
         }), { expiresIn: 15 });
