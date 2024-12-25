@@ -58,7 +58,11 @@ export default function Page({params,}: {
 
     return (
         <div className="w-[80%] mx-auto">
-            <Link href={`/gallery/${id}/upload`}><Button type="default">Upload</Button></Link>
+            <div className="flex justify-end">
+                <Link href={`/gallery/${id}/upload`}>
+                    <Button type="default">Upload</Button>
+                </Link>
+            </div>
 
             <div className="mt-8 flex flex-wrap">
                 {gallery ? gallery.images.map((image) => (
