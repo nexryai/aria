@@ -73,7 +73,7 @@ export class GalleryService {
             return {
                 ...gallery,
                 images: null,
-                thumbnail: gallery.images[0]?.storageKey ?? "/placeholder.png"
+                thumbnail: gallery.images[0]?.thumbnailKey ?? "/placeholder.png"
             };
         }));
     }

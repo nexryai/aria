@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { PlusOutlined } from "@ant-design/icons";
+import { FolderOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Drawer, Input } from "antd";
 
 import { app } from "@/browser/api";
@@ -46,7 +46,7 @@ export default function Home() {
                 setIsLoading(false);
             });
         });
-    });
+    }, []);
 
     return (
         <div className="w-[80%] mx-auto">
@@ -70,17 +70,12 @@ export default function Home() {
                         <span className="text-xl">Gallery</span>
                         <Button icon={<PlusOutlined />} onClick={() => setAddGalleryDrawerIsOpen(true)} type="default">Add</Button>
                     </div>
-                    <div>
+                    <div className="flex flex-wrap gap-4">
                         {galleries.map((gallery) => (
                             <Link key={gallery.id} href={`gallery/${gallery.id}`}>
-                                <div className="flex gap-3 mt-4">
+                                <div className="flex gap-3 mt-4 border rounded-lg p-4 w-64">
                                     <div>
-                                        <img
-                                            src={gallery.thumbnail}
-                                            alt={gallery.name}
-                                            width={100}
-                                            height={100}
-                                        />
+                                        <FolderOutlined />
                                     </div>
                                     <div>
                                         <span>{gallery.name}</span>
