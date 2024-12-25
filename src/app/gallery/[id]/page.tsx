@@ -64,7 +64,7 @@ export default function Page({params,}: {
                 </Link>
             </div>
 
-            <div className="mt-8 flex flex-wrap">
+            <div className="mt-8 flex flex-wrap justify-center">
                 {gallery ? gallery.images.map((image) => (
                     <div key={image.id} className="relative w-32 h-32 overflow-hidden m-1">
                         <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
@@ -83,13 +83,6 @@ export default function Page({params,}: {
                                     () => {
                                         // ロード完了時にblurhashを非表示にしてサムネイルを表示
                                         const thumb = document.getElementById(`thumbnail-${image.id}`) as HTMLImageElement;
-                                        const blurhash = document.getElementById(`blurhash-${image.id}`) as HTMLImageElement;
-                                        if (blurhash) {
-                                            setTimeout(() => {
-                                                blurhash.style.display = "none";
-                                            }, 500);
-                                        }
-
                                         thumb!.style.display = "block";
                                     }
                                 }

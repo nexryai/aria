@@ -28,10 +28,6 @@ self.onmessage = async (event: MessageEvent) => {
 
         if (!ctx) throw new Error("2Dコンテキストの取得に失敗しました");
 
-        // 背景を黒で塗りつぶし
-        ctx.fillStyle = "black";
-        ctx.fillRect(0, 0, targetWidth, targetHeight);
-
         // リサイズ画像を中央に描画
         ctx.drawImage(
             imageBitmap,
