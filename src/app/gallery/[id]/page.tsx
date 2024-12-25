@@ -8,6 +8,7 @@ import { motion } from "motion/react";
 
 import { app } from "@/browser/api";
 import { blurHashToDataURL } from "@/browser/blurhash";
+import { XInfiniteScrollContainer } from "@/components/core/InfiniteScroll";
 import { GalleryWithImages } from "@/schema/api";
 
 
@@ -69,37 +70,38 @@ export default function Page({params,}: {
                     <Button type="default">Upload</Button>
                 </Link>
             </div>
+            <XInfiniteScrollContainer fetchMore={() => {console.log("more!");}}>
+                <div className="mt-8 flex flex-wrap justify-center gap-1">
+                    {gallery ? gallery.images.map((image) => (
+                        <div key={image.id} className="relative w-32 h-32 overflow-hidden">
+                            <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
 
-            <div className="mt-8 flex flex-wrap justify-center gap-1">
-                {gallery ? gallery.images.map((image) => (
-                    <div key={image.id} className="relative w-32 h-32 overflow-hidden">
-                        <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
-
-                        <motion.div
-                            initial="hidden"
-                            animate="visible"
-                            variants={blurInVariants}
-                        >
-                            <img
-                                id={`thumbnail-${image.id}`}
-                                className="hidden w-32 h-32 object-cover absolute top-0 left-0"
-                                src={`/api/thumbnail/${image.thumbnailKey}`}
-                                alt="Thumbnail of gallery image"
-                                onLoad={
-                                    () => {
-                                        // ロード完了時にblurhashを非表示にしてサムネイルを表示
-                                        const thumb = document.getElementById(`thumbnail-${image.id}`) as HTMLImageElement;
-                                        thumb!.style.display = "block";
+                            <motion.div
+                                initial="hidden"
+                                animate="visible"
+                                variants={blurInVariants}
+                            >
+                                <img
+                                    id={`thumbnail-${image.id}`}
+                                    className="hidden w-32 h-32 object-cover absolute top-0 left-0"
+                                    src={`/api/thumbnail/${image.thumbnailKey}`}
+                                    alt="Thumbnail of gallery image"
+                                    onLoad={
+                                        () => {
+                                            // ロード完了時にサムネイルを表示
+                                            const thumb = document.getElementById(`thumbnail-${image.id}`) as HTMLImageElement;
+                                            thumb!.style.display = "block";
+                                        }
                                     }
-                                }
-                            />
-                        </motion.div>
+                                />
+                            </motion.div>
 
-                    </div>
-                )) : (
-                    <div>Loading...</div>
-                )}
-            </div>
+                        </div>
+                    )) : (
+                        <div>Loading...</div>
+                    )}
+                </div>
+            </XInfiniteScrollContainer>
         </div>
     );
 }
