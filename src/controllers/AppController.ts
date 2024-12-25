@@ -189,6 +189,32 @@ export const apiRouter = new Elysia({ prefix: "/api" })
             width: t.Number(),
             height: t.Number(),
         })
+    })
+
+    .get("/image/:key", async ({ uid, params: { key }, redirect }) => {
+        const signedUrl = await galleryService.getSignedImageUrl(uid, key, false);
+        if (!signedUrl) {
+            return error(404);
+        }
+
+        return redirect(signedUrl, 302);
+    }, {
+        params: t.Object({
+            key: t.String()
+        })
+    })
+
+    .get("/thumbnail/:key", async ({ uid, params: { key }, redirect }) => {
+        const signedUrl = await galleryService.getSignedImageUrl(uid, key, true);
+        if (!signedUrl) {
+            return error(404);
+        }
+
+        return redirect(signedUrl, 302);
+    }, {
+        params: t.Object({
+            key: t.String()
+        })
     });
 
 
