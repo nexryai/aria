@@ -95,7 +95,7 @@ export class GalleryService {
                 isThumbnail ? {
                     thumbnailKey: key,
                     userId: uid
-                }: {
+                } : {
                     storageKey: key,
                     userId: uid
                 }
