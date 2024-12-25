@@ -14,7 +14,7 @@ import { useDropzone } from "react-dropzone";
 
 import { app } from "@/browser/api";
 import { isSafari } from "@/browser/env";
-import initWasm, { get_image_props } from "@/wasm/pkg";
+import initWasm, { get_image_props as getImageProps } from "@/wasm/pkg";
 
 
 export default function Page({params,}: {
@@ -105,7 +105,7 @@ export default function Page({params,}: {
                         height: number;
                         blurhash: string;
                         checksum: string;
-                    } = await get_image_props(imageBuffer);
+                    } = await getImageProps(imageBuffer);
 
                     const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
                         sha256Hash: imageProps.checksum,
