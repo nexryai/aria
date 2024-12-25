@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { Button } from "antd";
@@ -13,6 +14,7 @@ import { GalleryWithImages } from "@/schema/api";
 export default function Page({params,}: {
     params: Promise<{ id: string }>
 }) {
+    const router = useRouter();
     const [id, setId] = useState("");
     const [gallery, setGallery] = useState<GalleryWithImages | null>(null);
 
@@ -34,7 +36,11 @@ export default function Page({params,}: {
     const fetchGallery = async (offset: number = 0) => {
         const id = (await params).id;
         setId(id);
-        const { data } = await app.api.gallery({id}).get({query: {offset}});
+        const { data, status } = await app.api.gallery({id}).get({query: {offset}});
+        if (status === 401) {
+            router.push("/login");
+            return;
+        }
 
         const gallery: GalleryWithImages = data;
         console.log(gallery);

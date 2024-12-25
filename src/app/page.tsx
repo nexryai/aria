@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { FolderOutlined, PlusOutlined } from "@ant-design/icons";
@@ -12,6 +13,7 @@ import { GallerySummary } from "@/schema/api";
 
 
 export default function Home() {
+    const router = useRouter();
     const [signedIn, setSignedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [addGalleryDrawerIsOpen, setAddGalleryDrawerIsOpen] = useState(false);
@@ -24,6 +26,9 @@ export default function Home() {
             const data: GallerySummary[] = res.data;
             setGalleries(data);
         } else {
+            if (res.response.status === 401) {
+                router.push("/login");
+            }
             console.error(res.error);
         }
     };
