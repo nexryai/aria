@@ -43,9 +43,26 @@ export default function Page({params,}: {
             return;
         }
 
-        const gallery: GalleryWithImages = data;
-        console.log(gallery);
-        setGallery(gallery);
+        const fetched: GalleryWithImages = data;
+        console.log(fetched);
+
+        if (gallery) {
+            setGallery({
+                ...gallery,
+                images: [
+                    ...gallery.images,
+                    ...fetched.images,
+                ]
+            });
+        } else {
+            setGallery(fetched);
+        }
+    };
+
+    const fetchMore = () => {
+        if (gallery) {
+            fetchGallery(gallery.images.length);
+        }
     };
 
     useEffect(() => {
@@ -70,7 +87,7 @@ export default function Page({params,}: {
                     <Button type="default">Upload</Button>
                 </Link>
             </div>
-            <XInfiniteScrollContainer fetchMore={() => {console.log("more!");}}>
+            <XInfiniteScrollContainer fetchMore={() => {fetchMore();}}>
                 <div className="mt-8 flex flex-wrap justify-center gap-1">
                     {gallery ? gallery.images.map((image) => (
                         <div key={image.id} className="relative w-32 h-32 overflow-hidden">
