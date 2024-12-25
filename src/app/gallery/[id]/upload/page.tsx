@@ -90,106 +90,107 @@ export default function Page({params,}: {
 
     const processUpload = async () => {
         if (!wasmInitialized || !thumbnailWorker) {
+            console.error("WASM or thumbnailWorker is not initialized");
             return;
         }
 
         for (let i = 0; i < uploadQueue.length; i++) {
             const currentFile = uploadQueue[i];
-            const reader = new FileReader();
+            console.log(`Processing ${currentFile.name}`);
 
-            reader.onload = async () => {
-                try {
-                    const imageBuffer = new Uint8Array(reader.result as ArrayBuffer);
-                    const imageProps: {
-                        width: number;
-                        height: number;
-                        blurhash: string;
-                        checksum: string;
-                    } = await getImageProps(imageBuffer);
+            try {
+                const imageBuffer = new Uint8Array(await currentFile.file.arrayBuffer());
+                const imageProps: {
+                    width: number;
+                    height: number;
+                    blurhash: string;
+                    checksum: string;
+                } = await getImageProps(imageBuffer);
 
-                    const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
-                        sha256Hash: imageProps.checksum,
-                        blurhash: imageProps.blurhash,
-                        width: imageProps.width,
-                        height: imageProps.height,
-                    });
+                const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
+                    sha256Hash: imageProps.checksum,
+                    blurhash: imageProps.blurhash,
+                    width: imageProps.width,
+                    height: imageProps.height,
+                });
 
-                    if (!signedUrls.response.ok) {
-                        if (signedUrls.response.status === 409) {
-                            setFailedFiles((prev) => [
-                                ...prev,
-                                { name: currentFile.name, reason: "The same file already exists." },
-                            ]);
-
-                            return;
-                        } else {
-                            throw new Error("Failed to get signed URLs");
-                        }
-                    }
-
-                    const { imageUploadUrl, thumbnailUploadUrl }: { imageUploadUrl: string, thumbnailUploadUrl: string } = signedUrls.data;
-
-                    // PUT request to signedUrl
-                    const imageUploadResponse = await fetch(imageUploadUrl, {
-                        method: "PUT",
-                        body: imageBuffer,
-                    });
-
-                    if (!imageUploadResponse.ok) {
+                if (!signedUrls.response.ok) {
+                    if (signedUrls.response.status === 409) {
                         setFailedFiles((prev) => [
                             ...prev,
-                            {
-                                name: currentFile.name,
-                                reason: `Failed to upload image. Response code was ${imageUploadResponse.status}`,
-                            },
+                            { name: currentFile.name, reason: "The same file already exists." },
                         ]);
 
-                        return;
+                        continue;
+                    } else {
+                        throw new Error("Failed to get signed URLs");
                     }
+                }
 
-                    // Create thumbnail
-                    const thumbnailBlob = await waitForThumbnail(thumbnailWorker, imageBuffer);
-                    const thumbnailUploadResponse = await fetch(thumbnailUploadUrl, {
-                        method: "PUT",
-                        body: await thumbnailBlob.arrayBuffer(),
-                    });
+                const { imageUploadUrl, thumbnailUploadUrl }: { imageUploadUrl: string, thumbnailUploadUrl: string } = signedUrls.data;
 
-                    if (!thumbnailUploadResponse.ok) {
-                        setFailedFiles((prev) => [
-                            ...prev,
-                            {
-                                name: currentFile.name,
-                                reason: `Failed to upload thumbnail. Response code was ${thumbnailUploadResponse.status}`,
-                            },
-                        ]);
+                // PUT request to signedUrl
+                const imageUploadResponse = await fetch(imageUploadUrl, {
+                    method: "PUT",
+                    body: imageBuffer,
+                });
 
-                        return;
-                    }
-
-                    // ここまで来たら成功
-                    setUploadedFiles((prev) => [...prev, { name: currentFile.name }]);
-                } catch (e) {
+                if (!imageUploadResponse.ok) {
                     setFailedFiles((prev) => [
                         ...prev,
                         {
                             name: currentFile.name,
-                            reason: `Failed to process image: ${e}`,
+                            reason: `Failed to upload image. Response code was ${imageUploadResponse.status}`,
                         },
                     ]);
-                } finally {
-                    setUploadQueue((prev) =>
-                        prev.map((item, index) =>
-                            index === i ? { ...item, done: true } : item
-                        )
-                    );
-                }
-            };
 
-            console.log(`Processing ${currentFile.name}`);
-            reader.readAsArrayBuffer(currentFile.file);
-            await new Promise((resolve) => setTimeout(resolve, 100)); // Sleep for 100ms
+                    continue;
+                }
+
+                // Create thumbnail
+                const thumbnailBlob = await waitForThumbnail(thumbnailWorker, imageBuffer);
+                const thumbnailUploadResponse = await fetch(thumbnailUploadUrl, {
+                    method: "PUT",
+                    body: await thumbnailBlob.arrayBuffer(),
+                });
+
+                if (!thumbnailUploadResponse.ok) {
+                    setFailedFiles((prev) => [
+                        ...prev,
+                        {
+                            name: currentFile.name,
+                            reason: `Failed to upload thumbnail. Response code was ${thumbnailUploadResponse.status}`,
+                        },
+                    ]);
+
+                    continue;
+                }
+
+                // ここまで来たら成功
+                setUploadedFiles((prev) => [...prev, { name: currentFile.name }]);
+            } catch (e) {
+                console.error("Failed to process image", e);
+                setFailedFiles((prev) => [
+                    ...prev,
+                    {
+                        name: currentFile.name,
+                        reason: `Failed to process image: ${e}`,
+                    },
+                ]);
+            } finally {
+                setUploadQueue((prev) =>
+                    prev.map((item, index) =>
+                        index === i ? {
+                            ...item,
+                            isUploading: false,
+                            done: true
+                        } : item
+                    )
+                );
+            }
         }
 
+        console.log("All files processed");
         setUploadQueue([]);
     };
 
@@ -219,24 +220,24 @@ export default function Page({params,}: {
                     <p>Queue</p>
                     <AnimatePresence>
                         {uploadQueue.map((item, index) => (
-                            <motion.div
-                                key={index}
-                                className="flex m-4 p-4 border border-gray-200 rounded-lg"
-                                initial={{opacity: 0, y: 70}}
-                                animate={{opacity: 1, y: 0}}
-                                exit={{opacity: 0, x: 70}}
-                            >
-                                {
-                                    !item.isUploading ? (
-                                        <PlusOutlined className="mt-1 mr-2 h-4 w-4"/>
-                                    ) : !item.done ? (
-                                        <LoadingOutlined className="mt-1 mr-2 h-4 w-4"/>
-                                    ) : (
-                                        <CheckCircleOutlined className="mt-1 mr-2 h-4 w-4 text-green-700"/>
-                                    )
-                                }
-                                {item.name}
-                            </motion.div>
+                            (item.isUploading || !item.done) && (
+                                <motion.div
+                                    key={index}
+                                    className="flex m-4 p-4 border border-gray-200 rounded-lg"
+                                    initial={{opacity: 0, y: 70}}
+                                    animate={{opacity: 1, y: 0}}
+                                    exit={{opacity: 0, x: 70}}
+                                >
+                                    {
+                                        item.isUploading ? (
+                                            <LoadingOutlined className="mt-1 mr-2 h-4 w-4"/>
+                                        ) : !item.done && (
+                                            <PlusOutlined className="mt-1 mr-2 h-4 w-4"/>
+                                        )
+                                    }
+                                    {item.name}
+                                </motion.div>
+                            )
                         ))}
                     </AnimatePresence>
 
