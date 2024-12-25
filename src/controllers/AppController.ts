@@ -12,9 +12,9 @@ import { UserService } from "@/services/UserService";
 
 // Nextのプロダクションビルドでコケる対策
 const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
-const s3Endpoint = !loadEnv ? process.env.S3_ENDPOINT : "DUMMY";
-const s3AccessKeyId = !loadEnv ? process.env.S3_ACCESS_KEY_ID : "DUMMY";
-const s3SecretAccessKey = !loadEnv ? process.env.S3_SECRET_ACCESS_KEY : "DUMMY";
+const s3Endpoint = loadEnv ? process.env.S3_ENDPOINT : "DUMMY";
+const s3AccessKeyId = loadEnv ? process.env.S3_ACCESS_KEY_ID : "DUMMY";
+const s3SecretAccessKey = loadEnv ? process.env.S3_SECRET_ACCESS_KEY : "DUMMY";
 
 if (!s3Endpoint || !s3AccessKeyId || !s3SecretAccessKey) {
     throw new Error("Invalid configuration");
