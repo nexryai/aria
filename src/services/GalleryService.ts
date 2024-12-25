@@ -112,7 +112,7 @@ export class GalleryService {
         return await getSignedUrl(this.s3Client, new GetObjectCommand({
             Bucket: this.objectStorageBucket,
             Key: key
-        }));
+        }), { expiresIn: 15 });
     }
 
     public async getSingedUploadUrl(galleryId: string, uid: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
@@ -150,13 +150,16 @@ export class GalleryService {
             Bucket: this.objectStorageBucket,
             Key: storageKey,
             ACL: "private",
-        }), {expiresIn: 60 * 60});
+        }), {
+            // 本体のアップロードはサムネイルより先に行われるので、サムネイルの有効期限よりも短くしておく
+            expiresIn: 30
+        });
 
         const thumbnailUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
             Bucket: this.objectStorageBucket,
             Key: thumbnailKey,
             ACL: "private",
-        }), {expiresIn: 60 * 60});
+        }), { expiresIn: 60 });
 
         return {imageUploadUrl, thumbnailUploadUrl};
     }
