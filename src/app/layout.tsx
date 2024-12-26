@@ -33,7 +33,7 @@ export default function RootLayout({children,}: Readonly<{
                     href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300..500&family=Outfit:wght@300..500&display=swap"/>
             </head>
             <body
-                className={`antialiased`}
+                className={"antialiased"}
             >
                 <ConfigProvider theme={{
                     token: {
