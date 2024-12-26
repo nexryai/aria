@@ -47,9 +47,13 @@ export default function Home() {
     useEffect(() => {
         isSignedIn().then((signedIn) => {
             setSignedIn(signedIn);
-            fetchGalleries().then(() => {
+            if (signedIn) {
+                fetchGalleries().then(() => {
+                    setIsLoading(false);
+                });
+            } else {
                 setIsLoading(false);
-            });
+            }
         });
     }, []);
 
