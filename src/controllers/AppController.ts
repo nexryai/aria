@@ -118,7 +118,7 @@ export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodyS
     });
 
 
-export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySize: 1024 *  1024 * 4 }  })
+export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
     .use(errorHandler)
     .derive(({ cookie: {token} }) => {
         // Auth middleware
