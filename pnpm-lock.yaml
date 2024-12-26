@@ -67,6 +67,9 @@ devDependencies:
   next:
     specifier: 15.1.2
     version: 15.1.2(react-dom@19.0.0)(react@19.0.0)
+  photoswipe:
+    specifier: ^5.4.4
+    version: 5.4.4
   postcss:
     specifier: ^8
     version: 8.4.49
@@ -4210,6 +4213,11 @@ packages:
     dependencies:
       lru-cache: 10.4.3
       minipass: 7.1.2
+    dev: true
+
+  /photoswipe@5.4.4:
+    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
+    engines: {node: '>= 0.12.0'}
     dev: true
 
   /picocolors@1.1.1:
