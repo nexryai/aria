@@ -3,6 +3,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import {
+    DeleteOutlined,
+    DownloadOutlined,
+    ZoomInOutlined, ZoomOutOutlined
+} from "@ant-design/icons";
 import { Button, Image as AntImage } from "antd";
 import { motion } from "motion/react";
 
@@ -10,6 +15,7 @@ import { app } from "@/browser/api";
 import { blurHashToDataURL } from "@/browser/blurhash";
 import { XInfiniteScrollContainer } from "@/components/core/InfiniteScroll";
 import { GalleryWithImages } from "@/schema/api";
+
 
 
 export default function Page({params,}: {
@@ -116,7 +122,37 @@ export default function Page({params,}: {
                                     width={128}
                                     height={128}
                                     src={`/api/thumbnail/${image.thumbnailKey}`}
-                                    preview={{src: `/api/image/${image.storageKey}`}}
+                                    preview={{
+                                        src: `/api/image/${image.storageKey}`,
+                                        toolbarRender: (
+                                            _,
+                                            {
+                                                transform: { scale },
+                                                actions: {
+                                                    onZoomOut,
+                                                    onZoomIn,
+                                                    onReset,
+                                                },
+                                            },
+                                        ) => (
+                                            <div className="ant-image-preview-footer">
+                                                <div className="ant-image-preview-operations">
+                                                    <div className="ant-image-preview-operations-operation">
+                                                        <DownloadOutlined onClick={() => {}} />
+                                                    </div>
+                                                    <div className="ant-image-preview-operations-operation">
+                                                        <ZoomOutOutlined disabled={scale === 1} onClick={onZoomOut}/>
+                                                    </div>
+                                                    <div className="ant-image-preview-operations-operation">
+                                                        <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn}/>
+                                                    </div>
+                                                    <div className="ant-image-preview-operations-operation">
+                                                        <DeleteOutlined onClick={onReset}/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ),
+                                    }}
                                     alt="Thumbnail of gallery image"
                                 />
 
