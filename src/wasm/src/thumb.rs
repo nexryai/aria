@@ -3,7 +3,7 @@ use std::io::Cursor;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 pub fn generate_thumbnail(data: &DynamicImage, w: u32, h: u32) -> Vec<u8> {
-    // 720pのサイズにリサイズ
+    // リサイズ
     // 縦と横、超過が大きい方に合わせる
     let size_factor = 360.0 / (w.max(h) as f64);
 

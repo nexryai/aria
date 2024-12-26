@@ -1,7 +1,5 @@
 pub mod props;
-pub mod render;
 mod thumb;
-mod enc;
 mod blurhash;
 mod checksum;
 
