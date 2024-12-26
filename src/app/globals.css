@@ -26,3 +26,7 @@ body {
 .ant-btn {
   font-weight: 500;
 }
+
+.ant-image-preview-mask {
+  backdrop-filter: blur(8px);
+}

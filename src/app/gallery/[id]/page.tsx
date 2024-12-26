@@ -3,16 +3,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { Button } from "antd";
+import { Button, Image as AntImage } from "antd";
 import { motion } from "motion/react";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 
 import { app } from "@/browser/api";
 import { blurHashToDataURL } from "@/browser/blurhash";
 import { XInfiniteScrollContainer } from "@/components/core/InfiniteScroll";
 import { GalleryWithImages } from "@/schema/api";
 
-import "photoswipe/style.css";
 
 export default function Page({params,}: {
     params: Promise<{ id: string }>
@@ -75,12 +73,6 @@ export default function Page({params,}: {
         }
     };
 
-    const lightbox = new PhotoSwipeLightbox({
-        gallery: "#pswp-gallery",
-        children: ".pswp-thumbnail",
-        pswpModule: () => import("photoswipe")
-    });
-
     useEffect(() => {
         isFetching = true;
         fetchGallery().then(() => {
@@ -96,13 +88,11 @@ export default function Page({params,}: {
                     img.src = blurHashToDataURL(image.blurhash) ?? "";
                 }
             }
-
-            lightbox.init();
         }
     }, [gallery]);
 
     return (
-        <div className="w-[80%] mx-auto" id="pswp-gallery">
+        <div className="w-[80%] mx-auto">
             <div className="flex justify-end">
                 <Link href={`/gallery/${id}/upload`}>
                     <Button type="default">Upload</Button>
@@ -119,27 +109,17 @@ export default function Page({params,}: {
                                 animate="visible"
                                 variants={blurInVariants}
                             >
-                                <a
-                                    href={`/api/image/${image.storageKey}`}
-                                    className="pswp-thumbnail"
-                                    data-pswp-src={`/api/image/${image.storageKey}`}
-                                    data-pswp-width={image.width}
-                                    data-pswp-height={image.height}
-                                >
-                                    <img
-                                        id={`thumbnail-${image.id}`}
-                                        className="hidden w-32 h-32 object-cover absolute top-0 left-0"
-                                        src={`/api/thumbnail/${image.thumbnailKey}`}
-                                        alt="Thumbnail of gallery image"
-                                        onLoad={
-                                            () => {
-                                                // ロード完了時にサムネイルを表示
-                                                const thumb = document.getElementById(`thumbnail-${image.id}`) as HTMLImageElement;
-                                                thumb!.style.display = "block";
-                                            }
-                                        }
-                                    />
-                                </a>
+
+                                <AntImage
+                                    id={`thumbnail-${image.id}`}
+                                    className="w-32 h-32 object-cover absolute top-0 left-0"
+                                    width={128}
+                                    height={128}
+                                    src={`/api/thumbnail/${image.thumbnailKey}`}
+                                    preview={{src: `/api/image/${image.storageKey}`}}
+                                    alt="Thumbnail of gallery image"
+                                />
+
                             </motion.div>
                         </div>
                     )) : (
