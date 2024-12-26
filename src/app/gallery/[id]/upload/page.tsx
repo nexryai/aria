@@ -14,7 +14,6 @@ import { useDropzone } from "react-dropzone";
 
 import { app } from "@/browser/api";
 import { isSafari } from "@/browser/env";
-import initWasm, { get_image_props as getImageProps } from "@/wasm/pkg";
 
 
 export default function Page({params,}: {
@@ -22,7 +21,7 @@ export default function Page({params,}: {
 }) {
     const isSupportedBrowser = !isSafari();
     const [thumbnailWorker, setThumbnailWorker] = useState<Worker>();
-    const [wasmInitialized, setWasmInitialized] = useState(false);
+    const [imagePropsWorker, setImagePropsWorker] = useState<Worker>();
     const [galleryId, setGalleryId] = useState("");
     const [uploadQueue, setUploadQueue] = useState<
         {
@@ -43,14 +42,10 @@ export default function Page({params,}: {
             setGalleryId(id);
         })();
 
-        if (!wasmInitialized) {
-            initWasm().then(() => {
-                setThumbnailWorker(new Worker(new URL("@/browser/worker/thumbnail", import.meta.url)));
+        setThumbnailWorker(new Worker(new URL("@/browser/worker/thumbnail", import.meta.url)));
+        setImagePropsWorker(new Worker(new URL("@/browser/worker/image-props", import.meta.url)));
 
-                console.log("WASM initialized");
-                setWasmInitialized(true);
-            });
-        }
+        console.log("Workers initialized");
     }, [params]);
 
     const { getRootProps, getInputProps } = useDropzone({
@@ -88,25 +83,47 @@ export default function Page({params,}: {
         });
     };
 
+    const waitForImageProps = (worker: Worker, file: Uint8Array): Promise<{
+        width: number;
+        height: number;
+        blurhash: string;
+        checksum: string;
+    }> => {
+        return new Promise((resolve, reject) => {
+            worker.postMessage({ file });
+
+            worker.onmessage = (e: MessageEvent) => {
+                const { width, height, blurhash, checksum, error } = e.data;
+
+                if (width && height && blurhash && checksum) {
+                    resolve({ width, height, blurhash, checksum });
+                } else {
+                    reject(error);
+                }
+            };
+        });
+    };
+
     const processUpload = async () => {
-        if (!wasmInitialized || !thumbnailWorker) {
-            console.error("WASM or thumbnailWorker is not initialized");
+        if (!thumbnailWorker || !imagePropsWorker) {
+            console.error("worker(s) is not initialized");
             return;
         }
 
         for (let i = 0; i < uploadQueue.length; i++) {
             const currentFile = uploadQueue[i];
-            console.log(`Processing ${currentFile.name}`);
+            console.group(`Processing ${currentFile.name}`);
 
             try {
                 const imageBuffer = new Uint8Array(await currentFile.file.arrayBuffer());
-                const imageProps: {
-                    width: number;
-                    height: number;
-                    blurhash: string;
-                    checksum: string;
-                } = await getImageProps(imageBuffer);
 
+                console.log("Getting image properties...");
+                const imageProps = await waitForImageProps(imagePropsWorker, imageBuffer);
+                if (!imageProps) {
+                    throw new Error("Failed to get image properties");
+                }
+
+                console.log("Getting signed URLs...");
                 const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
                     sha256Hash: imageProps.checksum,
                     blurhash: imageProps.blurhash,
@@ -121,6 +138,7 @@ export default function Page({params,}: {
                             { name: currentFile.name, reason: "The same file already exists." },
                         ]);
 
+                        console.warn("The same file already exists. Skipping...");
                         continue;
                     } else {
                         throw new Error("Failed to get signed URLs");
@@ -178,6 +196,7 @@ export default function Page({params,}: {
                     },
                 ]);
             } finally {
+                console.groupEnd();
                 setUploadQueue((prev) =>
                     prev.map((item, index) =>
                         index === i ? {
