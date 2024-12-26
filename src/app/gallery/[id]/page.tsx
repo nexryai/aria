@@ -15,6 +15,8 @@ import { GalleryWithImages } from "@/schema/api";
 export default function Page({params,}: {
     params: Promise<{ id: string }>
 }) {
+    let isFetching = false;
+    let noMoreFetch = false;
     const router = useRouter();
     const [id, setId] = useState("");
     const [gallery, setGallery] = useState<GalleryWithImages | null>(null);
@@ -44,7 +46,10 @@ export default function Page({params,}: {
         }
 
         const fetched: GalleryWithImages = data;
-        console.log(fetched);
+        if (fetched?.images.length == 0) {
+            noMoreFetch = true;
+            return;
+        }
 
         if (gallery) {
             setGallery({
@@ -60,13 +65,19 @@ export default function Page({params,}: {
     };
 
     const fetchMore = () => {
-        if (gallery) {
-            fetchGallery(gallery.images.length);
+        if (gallery && !noMoreFetch && !isFetching) {
+            isFetching = true;
+            fetchGallery(gallery.images.length).then(() => {
+                isFetching = false;
+            });
         }
     };
 
     useEffect(() => {
-        fetchGallery();
+        isFetching = true;
+        fetchGallery().then(() => {
+            isFetching = false;
+        });
     }, [params]);
 
     useEffect(() => {
@@ -112,7 +123,6 @@ export default function Page({params,}: {
                                     }
                                 />
                             </motion.div>
-
                         </div>
                     )) : (
                         <div>Loading...</div>
