@@ -95,7 +95,7 @@ abstract class AuthService {
         const calculatedAuthTag = hmac.digest();
 
         if (!crypto.timingSafeEqual(authTag, calculatedAuthTag)) {
-            throw new Error("Authentication failed");
+            throw new Error("Authentication failed: HMAC does not match");
         }
 
         // 復号化
