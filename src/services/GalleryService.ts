@@ -102,6 +102,17 @@ export class GalleryService {
         const storageKey = crypto.randomUUID();
         const thumbnailKey = crypto.randomUUID();
 
+        const gallery = await this.galleryRepository.findUnique({
+            where: {
+                id: galleryId,
+                userId: uid
+            }
+        });
+
+        if (!gallery) {
+            throw new Error("Gallery not found");
+        }
+
         const image = await this.imageRepository.create({
             data: {
                 storageKey: storageKey,
