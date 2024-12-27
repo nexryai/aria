@@ -1,5 +1,3 @@
-import { PHASE_PRODUCTION_BUILD } from "next/constants";
-
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -9,21 +7,12 @@ import { type Gallery } from "@prisma/client";
 
 
 export class GalleryService {
-    private readonly objectStorageBucket: string;
-
     constructor(
         private readonly galleryRepository: IGalleryRepository,
         private readonly imageRepository: IImageRepository,
         private readonly s3Client: S3Client,
-    ) {
-        const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
-        const bucket = loadEnv? process.env.S3_BUCKET : "DUMMY";
-        if (!bucket) {
-            throw new Error("Invalid configuration");
-        }
-
-        this.objectStorageBucket = bucket;
-    }
+        private readonly s3Bucket: string
+    ) {}
 
     public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<Gallery | null> {
         const found = await this.galleryRepository.findUnique(
@@ -110,7 +99,7 @@ export class GalleryService {
         }
 
         return getSignedUrl(this.s3Client, new GetObjectCommand({
-            Bucket: this.objectStorageBucket,
+            Bucket: this.s3Bucket,
             Key: key
         }), { expiresIn: 15 });
     }
@@ -147,7 +136,7 @@ export class GalleryService {
         }
 
         const imageUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
-            Bucket: this.objectStorageBucket,
+            Bucket: this.s3Bucket,
             Key: storageKey,
             ACL: "private",
         }), {
@@ -156,7 +145,7 @@ export class GalleryService {
         });
 
         const thumbnailUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
-            Bucket: this.objectStorageBucket,
+            Bucket: this.s3Bucket,
             Key: thumbnailKey,
             ACL: "private",
         }), { expiresIn: 60 });

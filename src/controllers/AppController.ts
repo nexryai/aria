@@ -15,8 +15,9 @@ const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
 const s3Endpoint = loadEnv ? process.env.S3_ENDPOINT : "DUMMY";
 const s3AccessKeyId = loadEnv ? process.env.S3_ACCESS_KEY_ID : "DUMMY";
 const s3SecretAccessKey = loadEnv ? process.env.S3_SECRET_ACCESS_KEY : "DUMMY";
+const s3Bucket = loadEnv ? process.env.S3_BUCKET : "DUMMY";
 
-if (!s3Endpoint || !s3AccessKeyId || !s3SecretAccessKey) {
+if (!s3Endpoint || !s3AccessKeyId || !s3SecretAccessKey || !s3Bucket) {
     throw new Error("Invalid configuration");
 }
 
@@ -31,7 +32,7 @@ const s3 = new S3Client({
 
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
-const galleryService = new GalleryService(galleryRepository, imageRepository, s3);
+const galleryService = new GalleryService(galleryRepository, imageRepository, s3, s3Bucket);
 
 export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
     .use(errorHandler)
