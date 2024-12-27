@@ -1,5 +1,5 @@
 import { type IGalleryRepository, IImageRepository } from "@/prisma";
-import { GallerySummary } from "@/schema/api";
+import { GallerySummary, GalleryWithImages } from "@/schema/api";
 import { type StorageService } from "@/services/internal/StorageService";
 import { type Gallery } from "@prisma/client";
 
@@ -11,7 +11,7 @@ export class GalleryService {
         private readonly storageService: StorageService
     ) {}
 
-    public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<Gallery | null> {
+    public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<GalleryWithImages | null> {
         const found = await this.galleryRepository.findUnique(
             {
                 where: {
@@ -98,7 +98,7 @@ export class GalleryService {
         return this.storageService.getSignedUrlGET(isThumbnail ? found.thumbnailKey : found.storageKey, 15);
     }
 
-    public async getSingedUploadUrl(galleryId: string, uid: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
+    public async getSingedUploadUrl(uid: string, galleryId: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
         const storageKey = crypto.randomUUID();
         const thumbnailKey = crypto.randomUUID();
 
