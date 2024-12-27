@@ -2,5 +2,9 @@ import { treaty } from "@elysiajs/eden";
 
 import { IElysiaApp } from "@/controllers/AppController";
 
-const url = process.env.URL_DOMAIN ?? "localhost:3000";
-export const app = treaty<IElysiaApp>(url);
+const url = typeof window !== "undefined"
+    ? new URL(window.location.origin)
+    : new URL("http://localhost:3000");
+
+const appDomain = url.host;
+export const app = treaty<IElysiaApp>(appDomain);
