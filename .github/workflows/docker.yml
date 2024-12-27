@@ -35,4 +35,4 @@ jobs:
           # https://github.com/nexryai/aria/issues/1
           # platforms: linux/amd64,linux/arm64
           push: true
-          tags: nexryai/airax:nightly
+          tags: nexryai/ariax:nightly
