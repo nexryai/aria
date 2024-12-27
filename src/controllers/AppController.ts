@@ -62,9 +62,6 @@ export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodyS
     .post("/verify-registration", async ({body, cookie}) => {
         const encryptedChallenge = cookie.challengeSession.value;
 
-        // debug
-        console.log(body);
-
         const ok = await passkeyAuthService.verifyRegistration(encryptedChallenge, body as unknown);
         if (!ok) {
             return new Response("Invalid challenge", {status: 400});
@@ -91,9 +88,6 @@ export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodyS
 
     .post("/verify-login", async ({body, cookie: {challengeSession, token}}) => {
         const encryptedChallenge = challengeSession.value;
-
-        // debug
-        console.log(body);
 
         const generatedToken = await passkeyAuthService.verifyLogin(encryptedChallenge, body as unknown);
         if (!token) {
