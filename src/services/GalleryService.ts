@@ -3,6 +3,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { type IGalleryRepository, IImageRepository } from "@/prisma";
 import { GallerySummary } from "@/schema/api";
+import { type StorageService } from "@/services/internal/StorageService";
 import { type Gallery } from "@prisma/client";
 
 
@@ -10,8 +11,7 @@ export class GalleryService {
     constructor(
         private readonly galleryRepository: IGalleryRepository,
         private readonly imageRepository: IImageRepository,
-        private readonly s3Client: S3Client,
-        private readonly s3Bucket: string
+        private readonly storageService: StorageService
     ) {}
 
     public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<Gallery | null> {
@@ -98,10 +98,7 @@ export class GalleryService {
             throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
         }
 
-        return getSignedUrl(this.s3Client, new GetObjectCommand({
-            Bucket: this.s3Bucket,
-            Key: key
-        }), { expiresIn: 15 });
+        return this.storageService.getSignedUrlGET(isThumbnail ? found.thumbnailKey : found.storageKey, 15);
     }
 
     public async getSingedUploadUrl(galleryId: string, uid: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
@@ -135,20 +132,8 @@ export class GalleryService {
             throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
         }
 
-        const imageUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
-            Bucket: this.s3Bucket,
-            Key: storageKey,
-            ACL: "private",
-        }), {
-            // 本体のアップロードはサムネイルより先に行われるので、サムネイルの有効期限よりも短くしておく
-            expiresIn: 30
-        });
-
-        const thumbnailUploadUrl = await getSignedUrl(this.s3Client, new PutObjectCommand({
-            Bucket: this.s3Bucket,
-            Key: thumbnailKey,
-            ACL: "private",
-        }), { expiresIn: 60 });
+        const imageUploadUrl = await this.storageService.getSingedUrlPUT(storageKey, 30);
+        const thumbnailUploadUrl = await this.storageService.getSingedUrlPUT(thumbnailKey, 60);
 
         return {imageUploadUrl, thumbnailUploadUrl};
     }

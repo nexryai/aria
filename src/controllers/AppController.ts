@@ -8,6 +8,7 @@ import { galleryRepository, imageRepository, passkeyRepository, userRepository }
 import { PasskeyAuthService } from "@/services/AuthService";
 import { GalleryService } from "@/services/GalleryService";
 import { UserService } from "@/services/UserService";
+import { AwsStorageService } from "@/services/internal/StorageService";
 
 
 // Nextのプロダクションビルドでコケる対策
@@ -30,9 +31,11 @@ const s3 = new S3Client({
     },
 });
 
+const storageService = new AwsStorageService(s3, s3Bucket);
+
 const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
-const galleryService = new GalleryService(galleryRepository, imageRepository, s3, s3Bucket);
+const galleryService = new GalleryService(galleryRepository, imageRepository, storageService);
 
 export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
     .use(errorHandler)
