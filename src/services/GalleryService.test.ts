@@ -98,4 +98,109 @@ describe("GalleryService test", async () => {
             await galleryService.getGalleryById(gallery.id, undefined, 0);
         })()).rejects.toThrowError("Integrity check failed: may be caused by bug(s) or leak of credentials");
     });
+
+    it("ギャラリーに画像を追加できる", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+
+        await galleryService.getSingedUploadUrl(
+            uid, gallery.id, "test", "test", 1920, 1080
+        );
+
+        const updated = await galleryService.getGalleryById(gallery.id, uid, 0);
+        expect(updated?.images.length).toEqual(1);
+        expect(updated?.images[0].width).toEqual(1920);
+        expect(updated?.images[0].height).toEqual(1080);
+    });
+
+    it("存在しないギャラリーに画像を追加できない", () => {
+        expect((async () => {
+            await galleryService.getSingedUploadUrl(
+                "test", "test", "test", "test", 1920, 1080
+            );
+        })()).rejects.toThrowError("Gallery not found");
+    });
+
+    it("他人のギャラリーに画像を追加できない", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+
+        const uid2 = await createUser("Bad User");
+
+        await expect((async () => {
+            await galleryService.getSingedUploadUrl(
+                uid2, gallery.id, "test", "test", 1920, 1080
+            );
+        })()).rejects.toThrowError("Gallery not found");
+    });
+
+    it("URLに署名できる（PUT）", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+
+        const url = await galleryService.getSingedUploadUrl(
+            uid, gallery.id, "test", "test", 1920, 1080
+        );
+
+        expect(typeof url.imageUploadUrl).toBe("string");
+        expect(typeof url.thumbnailUploadUrl).toBe("string");
+    });
+
+    it("URLの署名の有効期限が適切（PUT）", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+
+        const url = await galleryService.getSingedUploadUrl(
+            uid, gallery.id, "test", "test", 1920, 1080
+        );
+
+        expect(url.imageUploadUrl.endsWith("expiresIn=30")).toBeTruthy();
+        expect(url.thumbnailUploadUrl.endsWith("expiresIn=60")).toBeTruthy();
+    });
+
+    it("URLに署名できる（GET）", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+        await prismock.image.create({
+            data: {
+                storageKey: "testImage",
+                thumbnailKey: "testThumbnail",
+                userId: uid,
+                galleryId: gallery.id,
+                blurhash: "dummy",
+                sha256Hash: "dummy",
+                width: 1920,
+                height: 1080,
+            }
+        });
+
+        const url = await galleryService.getSignedImageUrl(uid, "testImage", false);
+        expect(url).not.toBeNull();
+
+        const thumbnail = await galleryService.getSignedImageUrl(uid, "testThumbnail", true);
+        expect(thumbnail).not.toBeNull();
+    });
+
+    it("URLの署名の有効期限が適切（GET）", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+        await prismock.image.create({
+            data: {
+                storageKey: "testImage",
+                thumbnailKey: "testThumbnail",
+                userId: uid,
+                galleryId: gallery.id,
+                blurhash: "dummy",
+                sha256Hash: "dummy",
+                width: 1920,
+                height: 1080,
+            }
+        });
+
+        const url = await galleryService.getSignedImageUrl(uid, "testImage", false);
+        expect(url?.endsWith("expiresIn=15")).toBeTruthy();
+
+        const thumbnail = await galleryService.getSignedImageUrl(uid, "testThumbnail", true);
+        expect(thumbnail?.endsWith("expiresIn=15")).toBeTruthy();
+    });
 });
