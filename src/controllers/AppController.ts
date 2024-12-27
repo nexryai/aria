@@ -37,7 +37,7 @@ const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
 const galleryService = new GalleryService(galleryRepository, imageRepository, storageService);
 
-export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
+export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 }, aot: false })
     .use(errorHandler)
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
         const user = await userService.createUser({name: body.displayName});
