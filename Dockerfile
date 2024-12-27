@@ -34,8 +34,8 @@ RUN pnpm install --prod --frozen-lockfile
 FROM node:22-alpine AS runner
 ENV NODE_ENV=production
 RUN apk add --no-cache ca-certificates tini \
-	&& addgroup -g 720 app \
-	&& adduser -u 720 -G app -D -h /app app
+	&& addgroup -g 723 app \
+	&& adduser -u 723 -G app -D -h /app app
 
 WORKDIR /app
 
