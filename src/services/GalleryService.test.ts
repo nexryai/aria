@@ -113,8 +113,8 @@ describe("GalleryService test", async () => {
         expect(updated?.images[0].height).toEqual(1080);
     });
 
-    it("存在しないギャラリーに画像を追加できない", () => {
-        expect((async () => {
+    it("存在しないギャラリーに画像を追加できない", async () => {
+        await expect((async () => {
             await galleryService.getSingedUploadUrl(
                 "test", "test", "test", "test", 1920, 1080
             );
