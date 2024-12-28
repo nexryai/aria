@@ -7,9 +7,8 @@ self.onmessage = async (event: MessageEvent) => {
         const blob = new Blob([file]);
         const imageBitmap = await createImageBitmap(blob);
 
-        // 720pリサイズ設定
-        const targetWidth = 1280;
-        const targetHeight = 720;
+        const targetWidth = 400;
+        const targetHeight = 400;
 
         // アスペクト比を計算
         const aspectRatio = imageBitmap.width / imageBitmap.height;
@@ -40,7 +39,7 @@ self.onmessage = async (event: MessageEvent) => {
         // WebP形式に変換
         const webpBlob = await offscreenCanvas.convertToBlob({
             type: "image/webp",
-            quality: 0.8,
+            quality: 0.7,
         });
 
         // メインスレッドに送信
