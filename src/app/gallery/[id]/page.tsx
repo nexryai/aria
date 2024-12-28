@@ -8,7 +8,7 @@ import {
     DownloadOutlined,
     ZoomInOutlined, ZoomOutOutlined
 } from "@ant-design/icons";
-import { Button, Image as AntImage } from "antd";
+import { Button, Image as AntImage, message, Popconfirm, PopconfirmProps } from "antd";
 import { motion } from "motion/react";
 
 import { app } from "@/browser/api";
@@ -79,6 +79,25 @@ export default function Page({params,}: {
         }
     };
 
+    const deleteConfirm: PopconfirmProps["onConfirm"] = (e) => {
+        app.api.gallery({id}).delete().then((res) => {
+            if (res.status === 401) {
+                router.push("/login");
+                return;
+            }
+
+            if (res.status === 200) {
+                router.push("/");
+            } else {
+                alert("Failed to delete gallery");
+            }
+        });
+    };
+
+    const cancel: PopconfirmProps["onCancel"] = (e) => {
+        console.log(e);
+    };
+
     useEffect(() => {
         isFetching = true;
         fetchGallery().then(() => {
@@ -100,6 +119,17 @@ export default function Page({params,}: {
     return (
         <div className="w-[80%] mx-auto">
             <div className="flex justify-end">
+                <Popconfirm
+                    className="mr-4"
+                    title="Delete this gallery?"
+                    description="Are you sure to delete this gallery?"
+                    onConfirm={deleteConfirm}
+                    onCancel={cancel}
+                    okText="Yes"
+                    cancelText="No"
+                >
+                    <Button type="text"><DeleteOutlined/></Button>
+                </Popconfirm>
                 <Link href={`/gallery/${id}/upload`}>
                     <Button type="default">Upload</Button>
                 </Link>
