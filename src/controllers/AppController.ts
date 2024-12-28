@@ -176,6 +176,14 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         })
     })
 
+    .delete("/gallery/:id", async ({ uid, params: { id } }) => {
+        return await galleryService.deleteGallery(id, uid);
+    }, {
+        params: t.Object({
+            id: t.String()
+        })
+    })
+
     .post("/gallery/:id/upload", async ({ uid, params: { id }, body }) => {
         return await galleryService.getSingedUploadUrl(
             uid,

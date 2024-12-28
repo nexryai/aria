@@ -75,6 +75,39 @@ export class GalleryService {
         });
     }
 
+    public async deleteGallery(uid: string, galleryId: string): Promise<void> {
+        const found = await this.galleryRepository.findUnique({
+            where: {
+                id: galleryId,
+                userId: uid
+            }
+        });
+
+        if (!found) {
+            throw new Error("Gallery not found");
+        }
+
+        if (found.userId !== uid || !uid) {
+            throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+        }
+
+        // remove images
+        // todo: オブジェクトストレージからも削除する
+        await this.imageRepository.deleteMany({
+            where: {
+                galleryId: galleryId,
+                userId: uid
+            }
+        });
+
+        await this.galleryRepository.delete({
+            where: {
+                id: galleryId,
+                userId: uid
+            }
+        });
+    }
+
     public async getSignedImageUrl(uid: string, key: string, isThumbnail: boolean): Promise<string | null> {
         const found = await this.imageRepository.findUnique({
             where:
