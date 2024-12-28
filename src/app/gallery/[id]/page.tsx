@@ -8,7 +8,7 @@ import {
     DownloadOutlined,
     ZoomInOutlined, ZoomOutOutlined
 } from "@ant-design/icons";
-import { Button, Image as AntImage, message, Popconfirm, PopconfirmProps } from "antd";
+import { Button, Image as AntImage, Popconfirm, PopconfirmProps } from "antd";
 import { motion } from "motion/react";
 
 import { app } from "@/browser/api";
@@ -79,7 +79,7 @@ export default function Page({params,}: {
         }
     };
 
-    const deleteConfirm: PopconfirmProps["onConfirm"] = (e) => {
+    const deleteConfirm: PopconfirmProps["onConfirm"] = () => {
         app.api.gallery({id}).delete().then((res) => {
             if (res.status === 401) {
                 router.push("/login");
