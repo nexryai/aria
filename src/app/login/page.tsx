@@ -62,7 +62,7 @@ export default function Page() {
         <>
             {contextHolder}
             <div className="w-full">
-                <div className="mt-52 mx-auto w-[600px]  rounded-lg overflow-hidden border-neutral-100 border">
+                <div className="mt-52 sm:mx-auto mx-4 sm:w-[600px]  rounded-lg overflow-hidden border-neutral-100 border">
                     <div className="relative h-12 p-2">
                         <span className="relative z-10 text-2xl text-white">Welcome back</span>
                         <img
@@ -72,10 +72,11 @@ export default function Page() {
                     </div>
                     <p className="m-6">Please sign in to continue</p>
                     <div className="mt-28 text-right">
-                        <div className="m-4 flex justify-end">
-                            <Button className="mr-2" size="large" onClick={register}>Register</Button>
+                        <div className="m-4 flex justify-end flex-wrap">
+                            <Button className="mr-2 mb-2" size="large" onClick={register}>Register</Button>
                             <Button
                                 icon={<UserOutlined />}
+                                className="mb-2"
                                 type="primary"
                                 onClick={() => {signIn().then(() => {successMessage("Signed in!");});}}
                                 size="large"
