@@ -129,28 +129,17 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
     .derive(({ cookie: {token} }) => {
         // Auth middleware
         if (!token || !token.value) {
-            return error(401, {
-                message: "Unauthorized",
-                uid: null,
-            });
+            throw new Error("AuthError: token not found");
         }
 
-        try {
-            const user = passkeyAuthService.decryptToken(token.value, false);
-            if (!user) {
-                throw new Error("Invalid token");
-            }
-
-            return {
-                uid: user.uid,
-            };
-        } catch(e) {
-            console.error(e);
-            return error(401, {
-                message: "Unauthorized",
-                uid: null,
-            });
+        const user = passkeyAuthService.decryptToken(token.value, false);
+        if (!user) {
+            throw new Error("AuthError: token is invalid");
         }
+
+        return {
+            uid: user.uid,
+        };
     })
 
     .get("/gallery", async ({ uid }) => {

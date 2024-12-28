@@ -14,11 +14,16 @@ export const errorHandler = (app: Elysia) =>
             return "Invalid request";
         }
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
         if (code == 401) {
             // なぜかset.status = 401が型エラーになる
             return new Response("Unauthorized", {status: 401});
+        }
+
+        // AuthErrorは401にする
+        if (error instanceof Error && (error.message.startsWith("AuthError:") || error.message.startsWith("Authentication"))) {
+            console.log("Authentication failed:", error.message);
+            set.status = 401;
+            return "Unauthorized";
         }
 
         // Prismaのエラーをハンドル
@@ -35,6 +40,8 @@ export const errorHandler = (app: Elysia) =>
         // 想定されないエラーは全部500
         console.error(`ERROR OCCURRED: ${error}`);
         console.error("===== STACK =====");
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         console.error(error.stack);
         console.error("=================");
         set.status = 500;
