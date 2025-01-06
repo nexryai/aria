@@ -72,7 +72,7 @@ export default defineConfig({
 
     /* Run your local dev server before starting the tests */
     webServer: {
-        command: "DATABASE_PATH=\"file:./test.db\" pnpm next build " +
+        command: "pnpm next build " +
             "&& cp -r .next/static .next/standalone/.next/static " +
             "&& npx prisma migrate deploy " +
             "&& node .next/standalone/server.js",

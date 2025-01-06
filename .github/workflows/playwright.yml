@@ -26,8 +26,9 @@ jobs:
         run: corepack enable
 
       - name: Create .env file
-        run: | 
-          echo "DATABASE_PATH=\"file:./test.db\"" > .env
+        run: |
+          DATABASE_PATH=$(pwd)/test.db
+          echo "DATABASE_PATH=\"$DATABASE_PATH\"" > .env
           echo "S3_ENDPOINT=\"https://DUMMY.r2.cloudflarestorage.com/ariax-dummy\"" >> .env
           echo "S3_BUCKET=\"ariax-dummy\"" >> .env
           echo "S3_ACCESS_KEY_ID=\"DUMMY\"" >> .env
