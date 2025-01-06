@@ -103,7 +103,6 @@ test.describe.serial("Authentications & API Calling", () => {
 
         // サインイン済みの状態でテストを行う
         await page.context().addCookies(savedCookies);
-        console.log(savedCookies);
 
         // Listen for all console logs
         page.on("console", msg => console.log(msg.text()));
