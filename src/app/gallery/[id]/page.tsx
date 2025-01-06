@@ -188,9 +188,7 @@ export default function Page({params,}: {
 
                             </motion.div>
                         </div>
-                    )) : (
-                        <div>Loading...</div>
-                    )}
+                    )) : isFetching ? <p>Loading...</p> : <p>No images</p>}
                 </div>
             </XInfiniteScrollContainer>
         </div>
