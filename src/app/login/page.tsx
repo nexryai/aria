@@ -1,5 +1,7 @@
 "use client";
 
+import { router } from "next/client";
+
 import { UserOutlined } from "@ant-design/icons";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Button, message } from "antd";
@@ -73,12 +75,16 @@ export default function Page() {
                     <p className="m-6">Please sign in to continue</p>
                     <div className="mt-28 text-right">
                         <div className="m-4 flex justify-end flex-wrap">
-                            <Button className="mr-2 mb-2" size="large" onClick={register}>Register</Button>
+                            <Button id="ariax-sign-up" className="mr-2 mb-2" size="large" onClick={register}>Register</Button>
                             <Button
+                                id="ariax-passkey-sign-in"
                                 icon={<UserOutlined />}
                                 className="mb-2"
                                 type="primary"
-                                onClick={() => {signIn().then(() => {successMessage("Signed in!");});}}
+                                onClick={() => {signIn().then(() => {
+                                    successMessage("Signed in!");
+                                    router.push("/");
+                                });}}
                                 size="large"
                             >
                             Sign in with Passkey

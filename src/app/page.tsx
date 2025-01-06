@@ -74,10 +74,10 @@ export default function Home() {
                 </div>
             }
             {!isLoading && signedIn &&
-                <>
+                <div id="ariax-gallery-list">
                     <div className="flex justify-between">
                         <span className="text-xl">Gallery</span>
-                        <Button icon={<PlusOutlined />} onClick={() => setAddGalleryDrawerIsOpen(true)} type="default">Add</Button>
+                        <Button id="ariax-add-gallery" icon={<PlusOutlined />} onClick={() => setAddGalleryDrawerIsOpen(true)} type="default">Add</Button>
                     </div>
                     <div className="flex flex-wrap gap-4">
                         {galleries.map((gallery) => (
@@ -93,14 +93,14 @@ export default function Home() {
                             </Link>
                         ))}
                     </div>
-                </>
+                </div>
             }
             <Drawer title="Add gallery" onClose={() => {
                 setAddGalleryDrawerIsOpen(false);
             }} open={addGalleryDrawerIsOpen}>
                 <Input id="new-gallery-name" placeholder="name"/>
                 <div className="flex justify-end mt-4">
-                    <Button onClick={addGallery} icon={<PlusOutlined/>} type="primary">Create</Button>
+                    <Button id="ariax-create-gallery-confirm" onClick={addGallery} icon={<PlusOutlined/>} type="primary">Create</Button>
                 </div>
             </Drawer>
         </div>
