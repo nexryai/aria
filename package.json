@@ -10,7 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "prisma": "^6.1.0"
+    "prisma": "^6.2.1"
   },
   "devDependencies": {
     "@ant-design/icons": "^5.5.2",
