@@ -29,8 +29,8 @@ devDependencies:
     specifier: ^1.49.1
     version: 1.49.1
   '@prisma/client':
-    specifier: ^6.1.0
-    version: 6.1.0(prisma@6.2.1)
+    specifier: ^6.2.1
+    version: 6.2.1(prisma@6.2.1)
   '@simplewebauthn/browser':
     specifier: ^13.0.0
     version: 13.0.0
@@ -75,7 +75,7 @@ devDependencies:
     version: 8.4.49
   prismock:
     specifier: ^1.35.1
-    version: 1.35.1(@prisma/client@6.1.0)(prisma@6.2.1)
+    version: 1.35.1(@prisma/client@6.2.1)(prisma@6.2.1)
   react:
     specifier: ^19.0.0
     version: 19.0.0
@@ -1588,8 +1588,8 @@ packages:
       playwright: 1.49.1
     dev: true
 
-  /@prisma/client@6.1.0(prisma@6.2.1):
-    resolution: {integrity: sha512-AbQYc5+EJKm1Ydfq3KxwcGiy7wIbm4/QbjCKWWoNROtvy7d6a3gmAGkKjK0iUCzh+rHV8xDhD5Cge8ke/kiy5Q==}
+  /@prisma/client@6.2.1(prisma@6.2.1):
+    resolution: {integrity: sha512-msKY2iRLISN8t5X0Tj7hU0UWet1u0KuxSPHWuf3IRkB4J95mCvGpyQBfQ6ufcmvKNOMQSq90O2iUmJEN2e5fiA==}
     engines: {node: '>=18.18'}
     requiresBuild: true
     peerDependencies:
@@ -4997,14 +4997,14 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
 
-  /prismock@1.35.1(@prisma/client@6.1.0)(prisma@6.2.1):
+  /prismock@1.35.1(@prisma/client@6.2.1)(prisma@6.2.1):
     resolution: {integrity: sha512-6VuuNpr3anZwzyyxprpkBK+VKfhAVP0iBOOeK8gEh+OhDc8ny4Y12+RJCB+Cl2BkMnlIIm1nb+IQMZYlzBTvCw==}
     peerDependencies:
       '@prisma/client': '*'
       prisma: '*'
     dependencies:
       '@paralleldrive/cuid2': 2.2.2
-      '@prisma/client': 6.1.0(prisma@6.2.1)
+      '@prisma/client': 6.2.1(prisma@6.2.1)
       '@prisma/generator-helper': 5.22.0
       '@prisma/internals': 5.22.0
       bson: 6.10.1
