@@ -8,7 +8,7 @@ RUN git clone https://github.com/nexryai/npmrun.git .
 RUN cargo build --release
 
 FROM node:22-alpine AS builder
-RUN apk add --no-cache ca-certificates git libressl libressl-dev cargo rustc-dev rust-wasm alpine-sdk g++ build-base cmake clang libc6-compat
+RUN apk add --no-cache ca-certificates git alpine-sdk g++ build-base cmake clang libc6-compat
 
 WORKDIR /app
 
@@ -20,10 +20,10 @@ RUN pnpm install
 COPY . .
 
 RUN pnpm prisma generate
-RUN pnpm run build
+RUN pnpm run build:api
 
 FROM node:22-alpine as prod_dependencies
-RUN apk add --no-cache ca-certificates git libressl libressl-dev
+RUN apk add --no-cache ca-certificates git
 
 WORKDIR /app
 
@@ -41,11 +41,7 @@ WORKDIR /app
 
 COPY --chown=app:app prisma ./prisma
 COPY --from=prod_dependencies /app/node_modules ./node_modules
-COPY --from=builder /app/next.config.ts ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next/static ./.next/static
-
-COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/built ./built
 COPY --from=npmrun-builder /src/target/release/npmrun /usr/local/bin/npmrun
 
 USER app

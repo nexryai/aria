@@ -6,7 +6,7 @@
     "build": "wasm-pack build --target web src/wasm && next build",
     "build:api": "tsc -p tsconfig.api.json && tsc-alias -p tsconfig.api.json",
     "dev": "next dev",
-    "docker:start": "npx prisma migrate deploy && node server.js",
+    "docker:start": "npx prisma migrate deploy && node built/server.js",
     "lint": "next lint",
     "start": "next start"
   },
