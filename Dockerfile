@@ -17,7 +17,7 @@ COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
 
-COPY . .
+COPY . ./
 
 RUN pnpm prisma generate
 RUN pnpm run build:api
@@ -31,7 +31,7 @@ COPY . ./
 RUN corepack enable
 RUN pnpm install --prod --frozen-lockfile
 
-FROM node:22-alpine AS runner
+FROM bun:1-alpine AS runner
 ENV NODE_ENV=production
 RUN apk add --no-cache ca-certificates tini \
 	&& addgroup -g 723 app \
@@ -39,6 +39,7 @@ RUN apk add --no-cache ca-certificates tini \
 
 WORKDIR /app
 
+COPY package.json /app
 COPY --chown=app:app prisma ./prisma
 COPY --from=prod_dependencies /app/node_modules ./node_modules
 COPY --from=builder /app/built ./built
