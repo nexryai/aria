@@ -1,7 +1,7 @@
 import { startAuthentication } from "@simplewebauthn/browser";
 
 export async function signIn(): Promise<void> {
-    const response = await fetch("/auth/login-request");
+    const response = await fetch("https://aria.nexryai.me/auth/login-request");
     const loginOptions = await response.json();
 
     let asseResp;
@@ -14,7 +14,7 @@ export async function signIn(): Promise<void> {
         throw error;
     }
 
-    const verificationResp = await fetch("/auth/verify-login", {
+    const verificationResp = await fetch("https://aria.nexryai.me/auth/verify-login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
