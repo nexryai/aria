@@ -6,7 +6,7 @@
     "build": "wasm-pack build --target web src/wasm && next build",
     "build:api": "tsc -p tsconfig.api.json && tsc-alias -p tsconfig.api.json",
     "dev": "next dev",
-    "docker:start": "bun x prisma migrate deploy && bun built/server.js",
+    "docker:start": "npx prisma migrate deploy && node built/server.js",
     "lint": "next lint",
     "start": "next start"
   },
@@ -17,6 +17,7 @@
     "@prisma/client": "^6.1.0",
     "@simplewebauthn/server": "^13.0.0",
     "elysia": "^1.2.10",
+    "polka": "^0.5.2",
     "prisma": "^6.1.0"
   },
   "devDependencies": {
@@ -26,6 +27,7 @@
     "@playwright/test": "^1.49.1",
     "@simplewebauthn/browser": "^13.0.0",
     "@types/node": "^20",
+    "@types/polka": "^0.5.7",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "antd": "^5.22.5",

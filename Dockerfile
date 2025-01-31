@@ -31,7 +31,7 @@ COPY . ./
 RUN corepack enable
 RUN pnpm install --prod --frozen-lockfile
 
-FROM bun:1-alpine AS runner
+FROM node:22-alpine as runner
 ENV NODE_ENV=production
 RUN apk add --no-cache ca-certificates tini \
 	&& addgroup -g 723 app \
