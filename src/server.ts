@@ -2,7 +2,6 @@ import { Elysia } from "elysia";
 
 import { IncomingHttpHeaders } from "node:http";
 
-import { node } from "@elysiajs/node";
 import Polka from "polka";
 
 import { apiRouter, authRouter } from "@/controllers/AppController";
