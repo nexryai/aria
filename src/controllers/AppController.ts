@@ -1,5 +1,4 @@
 import { Elysia, error, t } from "elysia";
-import { PHASE_PRODUCTION_BUILD } from "next/constants";
 
 import { S3Client } from "@aws-sdk/client-s3";
 
@@ -12,7 +11,7 @@ import { AwsStorageService } from "@/services/internal/StorageService";
 
 
 // Nextのプロダクションビルドでコケる対策
-const loadEnv = process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD;
+const loadEnv = process.env.NEXT_PHASE !== "phase-production-build";
 const s3Endpoint = loadEnv ? process.env.S3_ENDPOINT : "DUMMY";
 const s3AccessKeyId = loadEnv ? process.env.S3_ACCESS_KEY_ID : "DUMMY";
 const s3SecretAccessKey = loadEnv ? process.env.S3_SECRET_ACCESS_KEY : "DUMMY";
