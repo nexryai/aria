@@ -39,6 +39,10 @@ const galleryService = new GalleryService(galleryRepository, imageRepository, st
 export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 }, aot: false })
     .use(errorHandler)
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
+        if (process.env.NODE_ENV === "production" && process.env.ALLOW_REGISTRATION !== "1") {
+            return new Response("Registration is disabled", {status: 403});
+        }
+
         const user = await userService.createUser({name: body.displayName});
         const res = await passkeyAuthService.genRegisterChallenge(user.id, body.displayName);
 
