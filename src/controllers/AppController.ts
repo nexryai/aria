@@ -36,7 +36,7 @@ const userService = new UserService(userRepository);
 const passkeyAuthService = new PasskeyAuthService(passkeyRepository);
 const galleryService = new GalleryService(galleryRepository, imageRepository, storageService);
 
-export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 }, aot: false })
+export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
     .use(errorHandler)
     .post("/register-request", async ({body, cookie: {challengeSession}}) => {
         if (process.env.NODE_ENV === "production" && process.env.ALLOW_REGISTRATION !== "1") {
@@ -127,7 +127,7 @@ export const authRouter = new Elysia({ prefix: "/auth", serve: { maxRequestBodyS
     });
 
 
-export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySize: 1024 *  1024 * 4 }, aot: false })
+export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySize: 1024 *  1024 * 4 } })
     .use(errorHandler)
     .derive(({ cookie: {token} }) => {
         // Auth middleware
