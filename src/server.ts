@@ -48,20 +48,20 @@ const server = http.createServer(async (req, res) => {
             body: bodyBuffer,
         });
 
-        const webStandardRes = await app.fetch(webStandardRequest);
+        const webStandardResponse = await app.fetch(webStandardRequest);
 
-        for (const [key, value] of webStandardRes.headers.entries()) {
+        for (const [key, value] of webStandardResponse.headers.entries()) {
             res.setHeader(key, value);
         }
 
-        res.writeHead(webStandardRes.status);
+        res.writeHead(webStandardResponse.status);
 
-        if (!webStandardRes.body) {
+        if (!webStandardResponse.body) {
             res.end();
             return;
         }
 
-        const reader = webStandardRes.body.getReader();
+        const reader = webStandardResponse.body.getReader();
         if (res.destroyed) {
             reader.cancel();
             return;
