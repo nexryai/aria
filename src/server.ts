@@ -1,8 +1,7 @@
 import { Elysia } from "elysia";
 
 import { IncomingHttpHeaders } from "node:http";
-
-import Polka from "polka";
+import * as http from "node:http";
 
 import { apiRouter, authRouter } from "@/controllers/AppController";
 
@@ -20,65 +19,86 @@ const app = new Elysia({ aot: false })
     .use(authRouter)
     .use(apiRouter);
 
-const server = Polka().use(async (req, res) => {
-    const requestUrl = (req.protocol || "http") + "://" + (req.host || req.headers.host || req.headers.origin) + req.url;
-    console.log(`[${req.method}]`, requestUrl);
-    const webStandardRequest = new Request(requestUrl, {
-        method: req.method,
-        headers: incomingHttpHeadersToRequestHeaders(req.headers),
-        body: req.body,
+const server = http.createServer(async (req, res) => {
+    const proto = req.headers["x-forwarded-proto"];
+    const protocol = Array.isArray(proto) ? proto[0] : proto;
+
+    const host = req.headers.host || "";
+
+    const requestUrl = `${ protocol || "http" }://${host}${req.url}`;
+
+    const body: Buffer[] = [];
+    req.on("data", (chunk) => {
+        body.push(chunk);
     });
 
-    const webStandardRes = await app.fetch(webStandardRequest);
+    req.on("error", (error) => {
+        console.error(error);
+    });
 
-    for (const [key, value] of webStandardRes.headers.entries()) {
-        res.setHeader(key, value);
-    }
+    req.on("end", async () => {
+        const bodyString = Buffer.concat(body).toString();
+        console.log(`[${req.method}]`, requestUrl);
 
-    res.writeHead(webStandardRes.status);
+        const webStandardRequest = new Request(requestUrl, {
+            method: req.method,
+            headers: incomingHttpHeadersToRequestHeaders(req.headers),
+            body: bodyString,
+        });
 
-    if (!webStandardRes.body) {
-        res.end();
-        return;
-    }
+        const webStandardRes = await app.fetch(webStandardRequest);
 
-    const reader = webStandardRes.body.getReader();
-    if (res.destroyed) {
-        reader.cancel();
-        return;
-    }
-
-    const cancel = (error: Error) => {
-        res.off("close", cancel);
-        res.off("error", cancel);
-
-        reader.cancel(error).catch(() => {});
-        if (error) res.destroy(error);
-    };
-
-    res.on("close", cancel);
-    res.on("error", cancel);
-
-    next();
-    async function next() {
-        try {
-            for (;;) {
-                const { done, value } = await reader.read();
-
-                if (done) break;
-
-                if (!res.write(value)) {
-                    res.once("drain", next);
-                    return;
-                }
-            }
-            res.end();
-        } catch (error) {
-            cancel(error instanceof Error ? error : new Error(String(error)));
+        for (const [key, value] of webStandardRes.headers.entries()) {
+            res.setHeader(key, value);
         }
-    }
+
+        res.writeHead(webStandardRes.status);
+
+        if (!webStandardRes.body) {
+            res.end();
+            return;
+        }
+
+        const reader = webStandardRes.body.getReader();
+        if (res.destroyed) {
+            reader.cancel();
+            return;
+        }
+
+        const cancel = (error: Error) => {
+            res.off("close", cancel);
+            res.off("error", cancel);
+
+            reader.cancel(error).catch(() => {});
+            if (error) res.destroy(error);
+        };
+
+        res.on("close", cancel);
+        res.on("error", cancel);
+
+        next();
+        async function next() {
+            try {
+                for (;;) {
+                    const { done, value } = await reader.read();
+
+                    if (done) break;
+
+                    if (!res.write(value)) {
+                        res.once("drain", next);
+                        return;
+                    }
+                }
+                res.end();
+            } catch (error) {
+                console.error(error);
+                cancel(error instanceof Error ? error : new Error(String(error)));
+            }
+        }
+    });
 });
 
 app.compile();
 server.listen(3000);
+
 console.log("Server started.");
