@@ -37,13 +37,15 @@ const server = http.createServer(async (req, res) => {
     });
 
     req.on("end", async () => {
-        const bodyString = Buffer.concat(body).toString();
+        const hasBody = body.length > 0 && req.method !== "GET" && req.method !== "HEAD";
+        const bodyBuffer = hasBody ? Buffer.concat(body) : null;
+
         console.log(`[${req.method}]`, requestUrl);
 
         const webStandardRequest = new Request(requestUrl, {
             method: req.method,
             headers: incomingHttpHeadersToRequestHeaders(req.headers),
-            body: bodyString,
+            body: bodyBuffer,
         });
 
         const webStandardRes = await app.fetch(webStandardRequest);
