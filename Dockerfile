@@ -12,7 +12,7 @@ RUN apk add --no-cache ca-certificates git alpine-sdk g++ build-base cmake clang
 
 WORKDIR /app
 
-RUN corepack enable
+RUN npm install -g pnpm
 COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install
@@ -28,7 +28,7 @@ RUN apk add --no-cache ca-certificates git
 WORKDIR /app
 
 COPY . ./
-RUN corepack enable
+RUN npm install -g pnpm
 RUN pnpm install --prod --frozen-lockfile
 
 FROM node:22-alpine as runner
