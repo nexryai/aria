@@ -15,7 +15,7 @@ function incomingHttpHeadersToRequestHeaders(headers:  IncomingHttpHeaders) {
 }
 
 console.log("Starting server...");
-const app = new Elysia({ aot: false })
+const app = new Elysia({ aot: false, precompile: true })
     .use(authRouter)
     .use(apiRouter);
 
@@ -100,7 +100,6 @@ const server = http.createServer(async (req, res) => {
     });
 });
 
-app.compile();
 server.listen(3000);
 
 console.log("Server started.");
