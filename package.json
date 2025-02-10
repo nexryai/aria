@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.717.0",
-    "@aws-sdk/s3-request-presigner": "^3.717.0",
+    "@aws-sdk/s3-request-presigner": "^3.744.0",
     "@prisma/client": "^6.1.0",
     "@simplewebauthn/server": "^13.0.0",
     "elysia": "^1.2.10",
