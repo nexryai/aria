@@ -1,11 +1,9 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { FolderOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Drawer, Input } from "antd";
+import { Link } from "react-router";
 
 import { app } from "@/browser/api";
 import { isSignedIn } from "@/browser/auth";
@@ -13,7 +11,6 @@ import { GallerySummary } from "@/schema/api";
 
 
 export default function Home() {
-    const router = useRouter();
     const [signedIn, setSignedIn] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [addGalleryDrawerIsOpen, setAddGalleryDrawerIsOpen] = useState(false);
@@ -27,7 +24,7 @@ export default function Home() {
             setGalleries(data);
         } else {
             if (res.response.status === 401) {
-                router.push("/login");
+                window.location.href = "/login";
             }
             console.error(res.error);
         }
@@ -63,14 +60,6 @@ export default function Home() {
             {!isLoading && !signedIn &&
                 <div className="flex flex-col gap-3 w-32 mx-auto mt-52">
                     <span>Powered by</span>
-                    <Image
-                        className="dark:invert"
-                        src="/next.svg"
-                        alt="Next.js logo"
-                        width={180}
-                        height={38}
-                        priority
-                    />
                 </div>
             }
             {!isLoading && signedIn &&
@@ -81,7 +70,7 @@ export default function Home() {
                     </div>
                     <div className="flex flex-wrap gap-4">
                         {galleries.map((gallery) => (
-                            <Link key={gallery.id} href={`gallery/${gallery.id}`}>
+                            <Link key={gallery.id} to={`gallery/${gallery.id}`}>
                                 <div className="flex gap-3 mt-4 border rounded-lg p-4 w-64">
                                     <div>
                                         <FolderOutlined />

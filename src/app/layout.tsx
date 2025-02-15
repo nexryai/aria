@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Button, ConfigProvider } from "antd";
-import { Route, Routes } from "react-router";
+import { Link, Route, Routes } from "react-router";
 
 import { isSignedIn } from "@/browser/auth";
 
@@ -31,7 +31,7 @@ export default function RootLayout() {
         }}>
             <div className="fixed top-0 left-0 flex justify-between p-4 w-full bg-white bg-opacity-80 backdrop-blur-xl z-50">
                 <div>
-                    <a href="/"><span className="text-xl cursor-pointer">AriaX</span></a>
+                    <Link to="/"><span className="text-xl cursor-pointer">AriaX</span></Link>
                 </div>
                 <div>
                     {signedIn ? <Avatar icon={<UserOutlined />} /> : <a href="login"><Button>Login</Button></a>}

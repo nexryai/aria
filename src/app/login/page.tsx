@@ -1,7 +1,5 @@
 "use client";
 
-import { router } from "next/client";
-
 import { UserOutlined } from "@ant-design/icons";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Button, message } from "antd";
@@ -83,7 +81,7 @@ export default function Page() {
                                 type="primary"
                                 onClick={() => {signIn().then(() => {
                                     successMessage("Signed in!");
-                                    router.push("/");
+                                    window.location.href = "/";
                                 });}}
                                 size="large"
                             >
