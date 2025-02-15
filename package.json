@@ -6,7 +6,7 @@
     "build": "wasm-pack build --target web src/wasm && vite build",
     "build:api": "tsc -p tsconfig.api.json && tsc-alias -p tsconfig.api.json",
     "dev": "vite dev --host 0.0.0.0",
-    "docker:start": "npx prisma migrate deploy && node built/server.js",
+    "docker:start": "nginx && node built/server.js",
     "lint": "eslint",
     "start": "vite start"
   },
