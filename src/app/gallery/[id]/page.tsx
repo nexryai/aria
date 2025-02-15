@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useParams } from "react-router";
 
 import {
     DeleteOutlined,
@@ -17,13 +17,13 @@ import { GalleryWithImages } from "@/schema/api";
 
 
 
-export default function Page({params,}: {
-    params: Promise<{ id: string }>
-}) {
+export default function Page() {
+    const params = useParams();
+    const id = params.id;
+    const [gallery, setGallery] = useState<GalleryWithImages | null>(null);
+
     let isFetching = false;
     let noMoreFetch = false;
-    const [id, setId] = useState("");
-    const [gallery, setGallery] = useState<GalleryWithImages | null>(null);
 
     const blurInVariants = {
         hidden: {
@@ -41,9 +41,7 @@ export default function Page({params,}: {
     };
 
     const fetchGallery = async (offset: number = 0) => {
-        const id = (await params).id;
-        setId(id);
-        const { data, status } = await app.api.gallery({id}).get({query: {offset}});
+        const { data, status } = await app.api.gallery({id: id!}).get({query: {offset}});
         if (status === 401) {
             window.location.href = "/login";
             return;
@@ -78,7 +76,7 @@ export default function Page({params,}: {
     };
 
     const deleteConfirm: PopconfirmProps["onConfirm"] = () => {
-        app.api.gallery({id}).delete().then((res) => {
+        app.api.gallery({id: id!}).delete().then((res) => {
             if (res.status === 401) {
                 window.location.href = "/login";
                 return;

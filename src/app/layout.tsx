@@ -8,6 +8,8 @@ import { Avatar, Button, ConfigProvider } from "antd";
 
 import { isSignedIn } from "@/browser/auth";
 
+import GalleryView from "./gallery/[id]/page";
+import GalleryUploadView from "./gallery/[id]/upload/page";
 import LoginView from "./login/page";
 import TopView from "./page";
 
@@ -41,6 +43,8 @@ export default function RootLayout() {
                 <Routes>
                     <Route path="/" element={<TopView />} />
                     <Route path={"/login"} element={<LoginView />} />
+                    <Route path={"/gallery/:id"} element={<GalleryView />} />
+                    <Route path={"/gallery/:id/upload"} element={<GalleryUploadView />} />
                 </Routes>
             </div>
         </ConfigProvider>

@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 
 import {
     CheckCircleOutlined,
@@ -16,13 +17,12 @@ import { app } from "@/browser/api";
 import { isSafari } from "@/browser/env";
 
 
-export default function Page({params,}: {
-    params: Promise<{ id: string }>
-}) {
+export default function Page() {
+    const params = useParams();
+    const galleryId = params.id;
     const isSupportedBrowser = !isSafari();
     const [thumbnailWorker, setThumbnailWorker] = useState<Worker>();
     const [imagePropsWorker, setImagePropsWorker] = useState<Worker>();
-    const [galleryId, setGalleryId] = useState("");
     const [uploadQueue, setUploadQueue] = useState<
         {
             name: string;
@@ -37,11 +37,6 @@ export default function Page({params,}: {
     >([]);
 
     useEffect(() => {
-        (async () => {
-            const {id} = await params;
-            setGalleryId(id);
-        })();
-
         setThumbnailWorker(new Worker(new URL("@/browser/worker/thumbnail", import.meta.url)));
         setImagePropsWorker(new Worker(new URL("@/browser/worker/image-props", import.meta.url)));
 
@@ -124,7 +119,7 @@ export default function Page({params,}: {
                 }
 
                 console.log("Getting signed URLs...");
-                const signedUrls = await app.api.gallery({id: galleryId}).upload.post({
+                const signedUrls = await app.api.gallery({id: galleryId!}).upload.post({
                     sha256Hash: imageProps.checksum,
                     blurhash: imageProps.blurhash,
                     width: imageProps.width,
