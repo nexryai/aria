@@ -1,6 +1,4 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import {
@@ -10,6 +8,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Image as AntImage, Popconfirm, PopconfirmProps } from "antd";
 import { motion } from "motion/react";
+import { Link } from "react-router";
 
 import { app } from "@/browser/api";
 import { blurHashToDataURL } from "@/browser/blurhash";
@@ -23,7 +22,6 @@ export default function Page({params,}: {
 }) {
     let isFetching = false;
     let noMoreFetch = false;
-    const router = useRouter();
     const [id, setId] = useState("");
     const [gallery, setGallery] = useState<GalleryWithImages | null>(null);
 
@@ -47,7 +45,7 @@ export default function Page({params,}: {
         setId(id);
         const { data, status } = await app.api.gallery({id}).get({query: {offset}});
         if (status === 401) {
-            router.push("/login");
+            window.location.href = "/login";
             return;
         }
 
@@ -82,12 +80,12 @@ export default function Page({params,}: {
     const deleteConfirm: PopconfirmProps["onConfirm"] = () => {
         app.api.gallery({id}).delete().then((res) => {
             if (res.status === 401) {
-                router.push("/login");
+                window.location.href = "/login";
                 return;
             }
 
             if (res.status === 200) {
-                router.push("/");
+                window.location.href = "/";
             } else {
                 alert("Failed to delete gallery");
             }
@@ -130,7 +128,7 @@ export default function Page({params,}: {
                 >
                     <Button type="text"><DeleteOutlined/></Button>
                 </Popconfirm>
-                <Link href={`/gallery/${id}/upload`}>
+                <Link to={`/gallery/${id}/upload`}>
                     <Button type="default">Upload</Button>
                 </Link>
             </div>
