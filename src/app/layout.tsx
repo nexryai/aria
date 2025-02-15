@@ -29,7 +29,7 @@ export default function RootLayout() {
                 fontFamily: "'Outfit', 'Noto Sans JP'",
             }
         }}>
-            <div className="fixed top-0 left-0 flex justify-between p-4 w-full bg-white bg-opacity-80 backdrop-blur-xl z-50">
+            <div className="fixed top-0 left-0 flex justify-between p-4 w-full bg-white/80 backdrop-blur-xl z-50">
                 <div>
                     <Link to="/"><span className="text-xl cursor-pointer">AriaX</span></Link>
                 </div>

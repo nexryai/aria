@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --background: #ffffff;
@@ -24,7 +22,7 @@ body {
 }
 
 .ant-btn {
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .ant-image-preview-mask {

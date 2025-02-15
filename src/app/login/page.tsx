@@ -64,7 +64,7 @@ export default function Page() {
             {contextHolder}
             <div className="absolute top-0 left-0 w-screen h-screen">
                 <img className="absolute top-0 left-0 h-full w-full object-cover -z-0" src="https://images.unsplash.com/photo-1619962992102-c965ab2ae27d?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
-                <div className="absolute top-0 left-0 h-full w-full object-cover -z-0 bg-white bg-opacity-50 backdrop-blur-2xl"></div>
+                <div className="absolute top-0 left-0 h-full w-full object-cover -z-0 bg-white/50 backdrop-blur-2xl"></div>
             </div>
             <motion.div
                 className="w-full relative"
