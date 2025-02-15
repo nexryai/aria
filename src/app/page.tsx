@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 import { FolderOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Drawer, Input } from "antd";
+import { Button, Drawer, Input, Result } from "antd";
 import { Link } from "react-router";
 
 import { app } from "@/browser/api";
@@ -58,8 +58,11 @@ export default function Home() {
         <div className="w-[80%] mx-auto">
             {isLoading && <p>Loading...</p> }
             {!isLoading && !signedIn &&
-                <div className="flex flex-col gap-3 w-44 mx-auto mt-52">
-                    <span>Please login to continue</span>
+                <div className="flex flex-col gap-3 w-96 mx-auto mt-52">
+                    <Result
+                        status="warning"
+                        title="Please login to continue"
+                    />
                 </div>
             }
             {!isLoading && signedIn &&
