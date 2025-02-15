@@ -58,8 +58,8 @@ export default function Home() {
         <div className="w-[80%] mx-auto">
             {isLoading && <p>Loading...</p> }
             {!isLoading && !signedIn &&
-                <div className="flex flex-col gap-3 w-32 mx-auto mt-52">
-                    <span>Powered by</span>
+                <div className="flex flex-col gap-3 w-44 mx-auto mt-52">
+                    <span>Please login to continue</span>
                 </div>
             }
             {!isLoading && signedIn &&
