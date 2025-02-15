@@ -3,9 +3,9 @@
 import { UserOutlined, LoginOutlined } from "@ant-design/icons";
 import { startRegistration } from "@simplewebauthn/browser";
 import { Button, message } from "antd";
+import { motion } from "motion/react";
 
 import { signIn } from "@/browser/auth";
-import { motion } from "motion/react";
 
 export default function Page() {
     const [messageApi, contextHolder] = message.useMessage();
@@ -76,7 +76,7 @@ export default function Page() {
                 <div className="mt-52 sm:mx-auto mx-4 sm:w-[600px]  rounded-lg overflow-hidden border-neutral-100 border bg-white shadow-2xl">
                     <div className="flex mt-16 justify-center">
                         <div className="flex justify-center bg-gray-200 rounded-full w-16 h-16">
-                            <UserOutlined className="w-10 h-10 mt-2.5" style={{ fontSize: '40px', color: '#08c' }} />
+                            <UserOutlined className="w-10 h-10 mt-2.5" style={{ fontSize: "40px", color: "#08c" }} />
                         </div>
 
                     </div>
