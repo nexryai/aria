@@ -134,14 +134,12 @@ export default function Page() {
                 <div className="mt-8 flex flex-wrap justify-center gap-1">
                     {gallery ? gallery.images.map((image) => (
                         <div key={image.id} className="relative w-32 h-32 overflow-hidden">
-                            <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
-
                             <motion.div
                                 initial="hidden"
                                 animate="visible"
                                 variants={blurInVariants}
                             >
-
+                                <img id={`blurhash-${image.id}`} className="w-32 h-32 object-cover absolute top-0 left-0" width={image.width} height={image.height}/>
                                 <AntImage
                                     id={`thumbnail-${image.id}`}
                                     className="w-32 h-32 object-cover absolute top-0 left-0"
@@ -181,7 +179,6 @@ export default function Page() {
                                     }}
                                     alt="Thumbnail of gallery image"
                                 />
-
                             </motion.div>
                         </div>
                     )) : isFetching ? <p>Loading...</p> : <p>No images</p>}
