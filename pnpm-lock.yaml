@@ -19,7 +19,7 @@ dependencies:
     version: 13.1.1
   elysia:
     specifier: ^1.2.10
-    version: 1.2.10(@sinclair/typebox@0.34.22)(typescript@5.7.2)
+    version: 1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2)
   prisma:
     specifier: ^6.1.0
     version: 6.2.1
@@ -92,8 +92,8 @@ devDependencies:
     specifier: ^7.1.5
     version: 7.1.5(react-dom@19.0.0)(react@19.0.0)
   tailwindcss:
-    specifier: ^4.0.6
-    version: 4.0.6
+    specifier: ^4.0.7
+    version: 4.0.7
   tsc-alias:
     specifier: ^1.8.10
     version: 1.8.10
@@ -1037,7 +1037,7 @@ packages:
     peerDependencies:
       elysia: '>= 1.2.0'
     dependencies:
-      elysia: 1.2.10(@sinclair/typebox@0.34.22)(typescript@5.7.2)
+      elysia: 1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2)
     dev: true
 
   /@emotion/hash@0.8.0:
@@ -1887,8 +1887,8 @@ packages:
       '@peculiar/asn1-x509': 2.3.15
     dev: false
 
-  /@sinclair/typebox@0.34.22:
-    resolution: {integrity: sha512-0avTcz3XUm6mMcq5tQRoEnxyvmr3uanplFepD+a/TiDzOBZ0Us5bsShW41xOO2kST7AYv4xiCsmE5Ag02yOPfQ==}
+  /@sinclair/typebox@0.34.25:
+    resolution: {integrity: sha512-gu+tdy9WZIRulrR4CAcGXZAAixwakKszkUXudMJ4EhtNflBEify5Pm5vnVEVqdmMkxnT4tcdfJps5XYqaNeF9Q==}
 
   /@smithy/abort-controller@3.1.9:
     resolution: {integrity: sha512-yiW0WI30zj8ZKoSYNx90no7ugVn3khlyH/z5W8qtKBtVE6awRALbhSG+2SAHA1r6bO/6M9utxYKVZ3PCJ1rWxw==}
@@ -3301,7 +3301,7 @@ packages:
     resolution: {integrity: sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==}
     dev: true
 
-  /elysia@1.2.10(@sinclair/typebox@0.34.22)(typescript@5.7.2):
+  /elysia@1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2):
     resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.34.0'
@@ -3313,7 +3313,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@sinclair/typebox': 0.34.22
+      '@sinclair/typebox': 0.34.25
       cookie: 1.0.2
       memoirist: 0.2.0
       typescript: 5.7.2
@@ -5779,6 +5779,10 @@ packages:
 
   /tailwindcss@4.0.6:
     resolution: {integrity: sha512-mysewHYJKaXgNOW6pp5xon/emCsfAMnO8WMaGKZZ35fomnR/T5gYnRg2/yRTTrtXiEl1tiVkeRt0eMO6HxEZqw==}
+    dev: true
+
+  /tailwindcss@4.0.7:
+    resolution: {integrity: sha512-yH5bPPyapavo7L+547h3c4jcBXcrKwybQRjwdEIVAd9iXRvy/3T1CC6XSQEgZtRySjKfqvo3Cc0ZF1DTheuIdA==}
     dev: true
 
   /tapable@2.2.1:
