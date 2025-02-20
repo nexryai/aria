@@ -19,7 +19,7 @@ dependencies:
     version: 13.1.1
   elysia:
     specifier: ^1.2.10
-    version: 1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2)
+    version: 1.2.10(@sinclair/typebox@0.34.27)(typescript@5.7.2)
   prisma:
     specifier: ^6.1.0
     version: 6.2.1
@@ -89,8 +89,8 @@ devDependencies:
     specifier: ^14.3.5
     version: 14.3.5(react@19.0.0)
   react-router:
-    specifier: ^7.1.5
-    version: 7.1.5(react-dom@19.0.0)(react@19.0.0)
+    specifier: ^7.2.0
+    version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
   tailwindcss:
     specifier: ^4.0.7
     version: 4.0.7
@@ -984,7 +984,7 @@ packages:
     peerDependencies:
       elysia: '>= 1.2.0'
     dependencies:
-      elysia: 1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2)
+      elysia: 1.2.10(@sinclair/typebox@0.34.27)(typescript@5.7.2)
     dev: true
 
   /@emotion/hash@0.8.0:
@@ -1834,8 +1834,8 @@ packages:
       '@peculiar/asn1-x509': 2.3.15
     dev: false
 
-  /@sinclair/typebox@0.34.25:
-    resolution: {integrity: sha512-gu+tdy9WZIRulrR4CAcGXZAAixwakKszkUXudMJ4EhtNflBEify5Pm5vnVEVqdmMkxnT4tcdfJps5XYqaNeF9Q==}
+  /@sinclair/typebox@0.34.27:
+    resolution: {integrity: sha512-C7mxE1VC3WC2McOufZXEU48IfRVI+BcKxk4NOyNn3+JMUNdJHEWGS5CqjuDX+ij2NCCz8/nse1mT7yn8Fv2GHg==}
 
   /@smithy/abort-controller@4.0.1:
     resolution: {integrity: sha512-fiUIYgIgRjMWznk6iLJz35K2YxSLHzLBA/RC6lBrKfQ8fHbPfvk7Pk9UvpKoHgJjI18MnbPuEju53zcVy6KF1g==}
@@ -3257,7 +3257,7 @@ packages:
     resolution: {integrity: sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==}
     dev: true
 
-  /elysia@1.2.10(@sinclair/typebox@0.34.25)(typescript@5.7.2):
+  /elysia@1.2.10(@sinclair/typebox@0.34.27)(typescript@5.7.2):
     resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.34.0'
@@ -3269,7 +3269,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@sinclair/typebox': 0.34.25
+      '@sinclair/typebox': 0.34.27
       cookie: 1.0.2
       memoirist: 0.2.0
       typescript: 5.7.2
@@ -5390,8 +5390,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-router@7.1.5(react-dom@19.0.0)(react@19.0.0):
-    resolution: {integrity: sha512-8BUF+hZEU4/z/JD201yK6S+UYhsf58bzYIDq2NS1iGpwxSXDu7F+DeGSkIXMFBuHZB21FSiCzEcUb18cQNdRkA==}
+  /react-router@7.2.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-fXyqzPgCPZbqhrk7k3hPcCpYIlQ2ugIXDboHUzhJISFVy2DEPsmHgN588MyGmkIOv3jDgNfUE3kJi83L28s/LQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
