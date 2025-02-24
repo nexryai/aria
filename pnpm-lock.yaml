@@ -89,8 +89,8 @@ devDependencies:
     specifier: ^14.3.5
     version: 14.3.5(react@19.0.0)
   react-router:
-    specifier: ^7.1.5
-    version: 7.1.5(react-dom@19.0.0)(react@19.0.0)
+    specifier: ^7.2.0
+    version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
   tailwindcss:
     specifier: ^4.0.7
     version: 4.0.7
@@ -5390,8 +5390,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-router@7.1.5(react-dom@19.0.0)(react@19.0.0):
-    resolution: {integrity: sha512-8BUF+hZEU4/z/JD201yK6S+UYhsf58bzYIDq2NS1iGpwxSXDu7F+DeGSkIXMFBuHZB21FSiCzEcUb18cQNdRkA==}
+  /react-router@7.2.0(react-dom@19.0.0)(react@19.0.0):
+    resolution: {integrity: sha512-fXyqzPgCPZbqhrk7k3hPcCpYIlQ2ugIXDboHUzhJISFVy2DEPsmHgN588MyGmkIOv3jDgNfUE3kJi83L28s/LQ==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       react: '>=18'
