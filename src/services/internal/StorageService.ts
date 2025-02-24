@@ -1,12 +1,13 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-export interface StorageService {
+export interface IStorageService {
     getSignedUrlGET(key: string, expiresIn: number): Promise<string>;
-    getSingedUrlPUT(key: string, expiresIn: number): Promise<string>;
+    getSignedUrlPUT(key: string, expiresIn: number): Promise<string>;
+    getSignedUrlDELETE(key: string, expiresIn: number): Promise<string>;
 }
 
-export class AwsStorageService implements StorageService {
+export class AwsStorageService implements IStorageService {
     constructor(
         private readonly s3Client: S3Client,
         private readonly s3Bucket: string
@@ -19,11 +20,18 @@ export class AwsStorageService implements StorageService {
         }), { expiresIn });
     }
 
-    public async getSingedUrlPUT(key: string, expiresIn: number): Promise<string> {
+    public async getSignedUrlPUT(key: string, expiresIn: number): Promise<string> {
         return await getSignedUrl(this.s3Client, new PutObjectCommand({
             Bucket: this.s3Bucket,
             Key: key,
             ACL: "private",
+        }), { expiresIn });
+    }
+
+    public async getSignedUrlDELETE(key: string, expiresIn: number): Promise<string> {
+        return await getSignedUrl(this.s3Client, new DeleteObjectCommand({
+            Bucket: this.s3Bucket,
+            Key: key,
         }), { expiresIn });
     }
 }

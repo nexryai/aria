@@ -1,6 +1,6 @@
 import { type IGalleryRepository, IImageRepository } from "@/prisma";
 import { GallerySummary, GalleryWithImages } from "@/schema/api";
-import { type StorageService } from "@/services/internal/StorageService";
+import { type IStorageService } from "@/services/internal/StorageService";
 import { type Gallery } from "@prisma/client";
 
 
@@ -8,7 +8,7 @@ export class GalleryService {
     constructor(
         private readonly galleryRepository: IGalleryRepository,
         private readonly imageRepository: IImageRepository,
-        private readonly storageService: StorageService
+        private readonly storageService: IStorageService
     ) {}
 
     public async getGalleryById(galleryId: string, uid: string, offset: number): Promise<GalleryWithImages | null> {
@@ -173,8 +173,8 @@ export class GalleryService {
             throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
         }
 
-        const imageUploadUrl = await this.storageService.getSingedUrlPUT(storageKey, 30);
-        const thumbnailUploadUrl = await this.storageService.getSingedUrlPUT(thumbnailKey, 60);
+        const imageUploadUrl = await this.storageService.getSignedUrlPUT(storageKey, 30);
+        const thumbnailUploadUrl = await this.storageService.getSignedUrlPUT(thumbnailKey, 60);
 
         return {imageUploadUrl, thumbnailUploadUrl};
     }

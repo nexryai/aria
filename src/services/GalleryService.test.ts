@@ -1,17 +1,21 @@
 import { PrismockClient } from "prismock";
 import { describe, it, expect, afterEach } from "vitest";
 
-import { type StorageService } from "@/services/internal/StorageService";
+import { type IStorageService } from "@/services/internal/StorageService";
 
 import { GalleryService } from "./GalleryService";
 
 
-class DummyStorageService implements StorageService {
+class DummyStorageService implements IStorageService {
     public async getSignedUrlGET(key: string, expiresIn: number): Promise<string> {
         return `https://example.com/${key}?expiresIn=${expiresIn}`;
     }
 
-    public async getSingedUrlPUT(key: string, expiresIn: number): Promise<string> {
+    public async getSignedUrlPUT(key: string, expiresIn: number): Promise<string> {
+        return `https://example.com/${key}?expiresIn=${expiresIn}`;
+    }
+
+    public async getSignedUrlDELETE(key: string, expiresIn: number): Promise<string> {
         return `https://example.com/${key}?expiresIn=${expiresIn}`;
     }
 }
