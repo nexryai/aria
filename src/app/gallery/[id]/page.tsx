@@ -41,7 +41,7 @@ export default function Page() {
     };
 
     const fetchGallery = async (offset: number = 0) => {
-        const { data, status } = await app.api.gallery({id: id!}).get({query: {offset}});
+        const { data, status } = await app.api.gallery({galleryId: id!}).get({query: {offset}});
         if (status === 401) {
             window.location.href = "/login";
             return;
@@ -76,7 +76,7 @@ export default function Page() {
     };
 
     const deleteConfirm: PopconfirmProps["onConfirm"] = () => {
-        app.api.gallery({id: id!}).delete().then((res) => {
+        app.api.gallery({galleryId: id!}).delete().then((res) => {
             if (res.status === 401) {
                 window.location.href = "/login";
                 return;

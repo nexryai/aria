@@ -157,29 +157,29 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         })
     })
 
-    .get("/gallery/:id", async ({ uid, params: { id }, query: { offset } }) => {
-        return await galleryService.getGalleryById(id, uid, offset ?? 0);
+    .get("/gallery/:galleryId", async ({ uid, params: { galleryId }, query: { offset } }) => {
+        return await galleryService.getGalleryById(galleryId, uid, offset ?? 0);
     }, {
         params: t.Object({
-            id: t.String()
+            galleryId: t.String()
         }),
         query: t.Object({
             offset: t.Optional(t.Number())
         })
     })
 
-    .delete("/gallery/:id", async ({ uid, params: { id } }) => {
-        return await galleryService.deleteGallery(uid, id);
+    .delete("/gallery/:galleryId", async ({ uid, params: { galleryId } }) => {
+        return await galleryService.deleteGallery(uid, galleryId);
     }, {
         params: t.Object({
-            id: t.String()
+            galleryId: t.String()
         })
     })
 
-    .post("/gallery/:id/upload", async ({ uid, params: { id }, body }) => {
+    .post("/gallery/:galleryId/upload", async ({ uid, params: { galleryId }, body }) => {
         return await galleryService.getSignedUploadUrl(
             uid,
-            id,
+            galleryId,
             body.sha256Hash,
             body.blurhash,
             body.width,
@@ -187,7 +187,7 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         );
     }, {
         params: t.Object({
-            id: t.String()
+            galleryId: t.String()
         }),
         body: t.Object({
             sha256Hash: t.String(),

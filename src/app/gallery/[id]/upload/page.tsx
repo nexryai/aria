@@ -119,7 +119,7 @@ export default function Page() {
                 }
 
                 console.log("Getting signed URLs...");
-                const signedUrls = await app.api.gallery({id: galleryId!}).upload.post({
+                const signedUrls = await app.api.gallery({galleryId: galleryId!}).upload.post({
                     sha256Hash: imageProps.checksum,
                     blurhash: imageProps.blurhash,
                     width: imageProps.width,
