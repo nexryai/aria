@@ -5,7 +5,7 @@
   "scripts": {
     "build": "wasm-pack build --target web src/wasm && vite build",
     "build:api": "tsc -p tsconfig.api.json && tsc-alias -p tsconfig.api.json",
-    "dev": "vite dev --host 0.0.0.0",
+    "dev": "node --env-file=.env built/server.js & vite dev --host 0.0.0.0",
     "docker:start": "nginx && node built/server.js",
     "lint": "eslint",
     "start": "vite start"

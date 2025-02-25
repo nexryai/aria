@@ -192,7 +192,7 @@ abstract class AuthService {
 export class PasskeyAuthService extends AuthService {
     private readonly rpName = "Aria";
     private readonly rpId = process.env.RP_ID || "localhost";
-    private readonly origin = process.env.APP_URL || "http://localhost:3000";
+    private readonly origin = process.env.APP_URL || "http://localhost:5173";
 
     constructor(
         private readonly passkeyRepository: IPasskeyRepository
