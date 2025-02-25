@@ -208,4 +208,41 @@ describe("GalleryService test", async () => {
         const thumbnail = await galleryService.getSignedImageUrl(uid, "testThumbnail", true);
         expect(thumbnail?.endsWith("expiresIn=15")).toBeTruthy();
     });
+
+    it("画像を削除できる", async () => {
+        const uid = await createUser("test");
+        const gallery = await galleryService.createGallery(uid, "test");
+        const image1 = await prismock.image.create({
+            data: {
+                storageKey: "testImage1",
+                thumbnailKey: "testThumbnail1",
+                userId: uid,
+                galleryId: gallery.id,
+                blurhash: "dummy1",
+                sha256Hash: "dummy2",
+                width: 1920,
+                height: 1080,
+            }
+        });
+
+        const image2 = await prismock.image.create({
+            data: {
+                storageKey: "testImage2",
+                thumbnailKey: "testThumbnail2",
+                userId: uid,
+                galleryId: gallery.id,
+                blurhash: "dummy1",
+                sha256Hash: "dummy2",
+                width: 1920,
+                height: 1080,
+            }
+        });
+
+        await galleryService.deleteImage(uid, gallery.id, image1.id);
+
+        const fetched = await galleryService.getGalleryById(gallery.id, uid, 0);
+
+        expect(fetched?.images.length).toEqual(1);
+        expect(fetched?.images[0].id).toEqual(image2.id);
+    });
 });
