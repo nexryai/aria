@@ -94,6 +94,12 @@ export default function Page() {
         console.log(e);
     };
 
+    const deleteImage = async (imageId: string) => {
+        if (confirm("Are you sure you want to delete image?")) {
+            await app.api.gallery({galleryId: id!}).image({imageId}).delete();
+        }
+    };
+
     useEffect(() => {
         isFetching = true;
         fetchGallery().then(() => {
@@ -155,7 +161,6 @@ export default function Page() {
                                                 actions: {
                                                     onZoomOut,
                                                     onZoomIn,
-                                                    onReset,
                                                 },
                                             },
                                         ) => (
@@ -171,7 +176,9 @@ export default function Page() {
                                                         <ZoomInOutlined disabled={scale === 50} onClick={onZoomIn}/>
                                                     </div>
                                                     <div className="ant-image-preview-operations-operation">
-                                                        <DeleteOutlined onClick={onReset}/>
+                                                        <DeleteOutlined onClick={ async() => {
+                                                            await deleteImage(image.id);
+                                                        }}/>
                                                     </div>
                                                 </div>
                                             </div>

@@ -197,7 +197,7 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         })
     })
 
-    .delete("/gallery/:galleryId/:imageId", async ({ uid, params: { galleryId, imageId } }) => {
+    .delete("/gallery/:galleryId/image/:imageId", async ({ uid, params: { galleryId, imageId } }) => {
         await galleryService.deleteImage(uid, galleryId, imageId);
     }, {
         params: t.Object({
@@ -206,6 +206,7 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         })
     })
 
+    // ToDo: パラメーターをオブジェクトストレージではなくDB上のimageIdにして /gallery 下のエンドポイントに移動
     .get("/image/:key", async ({ uid, params: { key }, redirect }) => {
         const signedUrl = await galleryService.getSignedImageUrl(uid, key, false);
         if (!signedUrl) {
