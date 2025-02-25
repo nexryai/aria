@@ -34,7 +34,7 @@
     "blurhash": "^2.0.5",
     "eslint": "^9",
     "eslint-plugin-import": "^2.31.0",
-    "globals": "^15.15.0",
+    "globals": "^16.0.0",
     "motion": "^12.4.1",
     "prismock": "^1.35.2",
     "react": "^19.0.0",
