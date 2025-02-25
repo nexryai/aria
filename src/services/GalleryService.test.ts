@@ -18,6 +18,10 @@ class DummyStorageService implements IStorageService {
     public async getSignedUrlDELETE(key: string, expiresIn: number): Promise<string> {
         return `https://example.com/${key}?expiresIn=${expiresIn}`;
     }
+
+    public async deleteItem(key: string): Promise<void> {
+        console.log(`Delete item: ${key}`);
+    }
 }
 
 describe("GalleryService test", async () => {

@@ -178,4 +178,28 @@ export class GalleryService {
 
         return {imageUploadUrl, thumbnailUploadUrl};
     }
+
+    public async deleteImage(uid: string, galleryId: string, imageId: string): Promise<void> {
+        const where = {
+            id: imageId,
+            galleryId: galleryId,
+            userId: uid
+        };
+
+        const found = await this.imageRepository.findUnique({ where });
+        if (!found) {
+            throw new Error("Image not found");
+        }
+
+        if (found.id != imageId || found.userId !== uid) {
+            throw new Error("Integrity check failed: may be caused by bug(s) or leak of credentials");
+        }
+
+        await Promise.all([
+            this.storageService.deleteItem(found.storageKey),
+            this.storageService.deleteItem(found.thumbnailKey)
+        ]);
+
+        await this.imageRepository.delete({ where });
+    }
 }

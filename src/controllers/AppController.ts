@@ -197,6 +197,15 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
         })
     })
 
+    .delete("/gallery/:galleryId/:imageId", async ({ uid, params: { galleryId, imageId } }) => {
+        await galleryService.deleteImage(uid, galleryId, imageId);
+    }, {
+        params: t.Object({
+            galleryId: t.String(),
+            imageId: t.String()
+        })
+    })
+
     .get("/image/:key", async ({ uid, params: { key }, redirect }) => {
         const signedUrl = await galleryService.getSignedImageUrl(uid, key, false);
         if (!signedUrl) {

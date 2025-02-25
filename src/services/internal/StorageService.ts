@@ -5,6 +5,7 @@ export interface IStorageService {
     getSignedUrlGET(key: string, expiresIn: number): Promise<string>;
     getSignedUrlPUT(key: string, expiresIn: number): Promise<string>;
     getSignedUrlDELETE(key: string, expiresIn: number): Promise<string>;
+    deleteItem(key: string): Promise<void>;
 }
 
 export class AwsStorageService implements IStorageService {
@@ -33,5 +34,14 @@ export class AwsStorageService implements IStorageService {
             Bucket: this.s3Bucket,
             Key: key,
         }), { expiresIn });
+    }
+
+    public async deleteItem(key: string): Promise<void> {
+        await this.s3Client.send(
+            new DeleteObjectCommand({
+                Bucket: this.s3Bucket,
+                Key: key
+            })
+        );
     }
 }
