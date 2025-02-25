@@ -131,7 +131,7 @@ export class GalleryService {
         return this.storageService.getSignedUrlGET(isThumbnail ? found.thumbnailKey : found.storageKey, 15);
     }
 
-    public async getSingedUploadUrl(uid: string, galleryId: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
+    public async getSignedUploadUrl(uid: string, galleryId: string, sha256Hash: string, blurhash: string, width: number, height: number): Promise<{imageUploadUrl: string, thumbnailUploadUrl: string}> {
         const storageKey = crypto.randomUUID();
         const thumbnailKey = crypto.randomUUID();
 

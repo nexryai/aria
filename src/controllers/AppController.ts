@@ -177,7 +177,7 @@ export const apiRouter = new Elysia({ prefix: "/api", serve: { maxRequestBodySiz
     })
 
     .post("/gallery/:id/upload", async ({ uid, params: { id }, body }) => {
-        return await galleryService.getSingedUploadUrl(
+        return await galleryService.getSignedUploadUrl(
             uid,
             id,
             body.sha256Hash,

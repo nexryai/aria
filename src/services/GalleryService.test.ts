@@ -40,7 +40,6 @@ describe("GalleryService test", async () => {
     };
 
     afterEach(async () => {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         await prismock.reset();
     });
@@ -73,7 +72,6 @@ describe("GalleryService test", async () => {
         await galleryService.createGallery(uid, "test");
 
         await expect((async () => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             await galleryService.getGalleriesByUserId(undefined);
         })()).rejects.toThrowError("Integrity check failed: may be caused by bug(s) or leak of credentials");
@@ -97,7 +95,6 @@ describe("GalleryService test", async () => {
         await galleryService.createGallery(uid2, "test");
 
         await expect((async () => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             await galleryService.getGalleryById(gallery.id, undefined, 0);
         })()).rejects.toThrowError("Integrity check failed: may be caused by bug(s) or leak of credentials");
@@ -107,7 +104,7 @@ describe("GalleryService test", async () => {
         const uid = await createUser("test");
         const gallery = await galleryService.createGallery(uid, "test");
 
-        await galleryService.getSingedUploadUrl(
+        await galleryService.getSignedUploadUrl(
             uid, gallery.id, "test", "test", 1920, 1080
         );
 
@@ -119,7 +116,7 @@ describe("GalleryService test", async () => {
 
     it("存在しないギャラリーに画像を追加できない", async () => {
         await expect((async () => {
-            await galleryService.getSingedUploadUrl(
+            await galleryService.getSignedUploadUrl(
                 "test", "test", "test", "test", 1920, 1080
             );
         })()).rejects.toThrowError("Gallery not found");
@@ -132,7 +129,7 @@ describe("GalleryService test", async () => {
         const uid2 = await createUser("Bad User");
 
         await expect((async () => {
-            await galleryService.getSingedUploadUrl(
+            await galleryService.getSignedUploadUrl(
                 uid2, gallery.id, "test", "test", 1920, 1080
             );
         })()).rejects.toThrowError("Gallery not found");
@@ -142,7 +139,7 @@ describe("GalleryService test", async () => {
         const uid = await createUser("test");
         const gallery = await galleryService.createGallery(uid, "test");
 
-        const url = await galleryService.getSingedUploadUrl(
+        const url = await galleryService.getSignedUploadUrl(
             uid, gallery.id, "test", "test", 1920, 1080
         );
 
@@ -154,7 +151,7 @@ describe("GalleryService test", async () => {
         const uid = await createUser("test");
         const gallery = await galleryService.createGallery(uid, "test");
 
-        const url = await galleryService.getSingedUploadUrl(
+        const url = await galleryService.getSignedUploadUrl(
             uid, gallery.id, "test", "test", 1920, 1080
         );
 
