@@ -41,8 +41,8 @@ devDependencies:
     specifier: ^1.49.1
     version: 1.49.1
   '@simplewebauthn/browser':
-    specifier: ^13.0.0
-    version: 13.0.0
+    specifier: ^13.1.0
+    version: 13.1.0
   '@tailwindcss/vite':
     specifier: ^4.0.8
     version: 4.0.8(vite@6.2.1)
@@ -1822,8 +1822,8 @@ packages:
     resolution: {integrity: sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==}
     dev: true
 
-  /@simplewebauthn/browser@13.0.0:
-    resolution: {integrity: sha512-7d/+gxoFoDQxq2EkLl/PuTIQ/rnSrA3bmr8L2Ij7bRyicJoCJX/NDGUNExyctB9nSDrEkkcrJMDkwpCYOGU3Lg==}
+  /@simplewebauthn/browser@13.1.0:
+    resolution: {integrity: sha512-WuHZ/PYvyPJ9nxSzgHtOEjogBhwJfC8xzYkPC+rR/+8chl/ft4ngjiK8kSU5HtRJfczupyOh33b25TjYbvwAcg==}
     dev: true
 
   /@simplewebauthn/server@13.1.1:
