@@ -11,7 +11,7 @@
     "start": "vite start"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.750.0",
+    "@aws-sdk/client-s3": "^3.758.0",
     "@aws-sdk/s3-request-presigner": "^3.750.0",
     "@prisma/client": "^6.1.0",
     "@simplewebauthn/server": "^13.1.1",
