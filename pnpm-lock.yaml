@@ -19,7 +19,7 @@ dependencies:
     version: 13.1.1
   elysia:
     specifier: ^1.2.10
-    version: 1.2.10(@sinclair/typebox@0.34.28)(typescript@5.7.3)
+    version: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
   prisma:
     specifier: ^6.1.0
     version: 6.2.1
@@ -86,8 +86,8 @@ devDependencies:
     specifier: ^19.0.0
     version: 19.0.0(react@19.0.0)
   react-dropzone:
-    specifier: ^14.3.5
-    version: 14.3.5(react@19.0.0)
+    specifier: ^14.3.8
+    version: 14.3.8(react@19.0.0)
   react-router:
     specifier: ^7.2.0
     version: 7.2.0(react-dom@19.0.0)(react@19.0.0)
@@ -984,7 +984,7 @@ packages:
     peerDependencies:
       elysia: '>= 1.2.0'
     dependencies:
-      elysia: 1.2.10(@sinclair/typebox@0.34.28)(typescript@5.7.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
     dev: true
 
   /@emotion/hash@0.8.0:
@@ -1839,8 +1839,8 @@ packages:
       '@peculiar/asn1-x509': 2.3.15
     dev: false
 
-  /@sinclair/typebox@0.34.28:
-    resolution: {integrity: sha512-e2B9vmvaa5ym5hWgCHw5CstP54au6AOLXrhZErLsOyyRzuWJtXl/8TszKtc5x8rw/b+oY7HKS9m9iRI53RK0WQ==}
+  /@sinclair/typebox@0.34.29:
+    resolution: {integrity: sha512-xTzI0LlHZ0eahKuN+2R+yJbEIUyV/ZSdtqvR3sHukgN56nvCW1tz+Yr6fQ6/7+WJ34AhaU9ZmYcHXv8xgj2Lvg==}
 
   /@smithy/abort-controller@4.0.1:
     resolution: {integrity: sha512-fiUIYgIgRjMWznk6iLJz35K2YxSLHzLBA/RC6lBrKfQ8fHbPfvk7Pk9UvpKoHgJjI18MnbPuEju53zcVy6KF1g==}
@@ -3262,7 +3262,7 @@ packages:
     resolution: {integrity: sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==}
     dev: true
 
-  /elysia@1.2.10(@sinclair/typebox@0.34.28)(typescript@5.7.3):
+  /elysia@1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3):
     resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.34.0'
@@ -3274,7 +3274,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@sinclair/typebox': 0.34.28
+      '@sinclair/typebox': 0.34.29
       cookie: 1.0.2
       memoirist: 0.2.0
       typescript: 5.7.3
@@ -5370,8 +5370,8 @@ packages:
       scheduler: 0.25.0
     dev: true
 
-  /react-dropzone@14.3.5(react@19.0.0):
-    resolution: {integrity: sha512-9nDUaEEpqZLOz5v5SUcFA0CjM4vq8YbqO0WRls+EYT7+DvxUdzDPKNCPLqGfj3YL9MsniCLCD4RFA6M95V6KMQ==}
+  /react-dropzone@14.3.8(react@19.0.0):
+    resolution: {integrity: sha512-sBgODnq+lcA4P296DY4wacOZz3JFpD99fp+hb//iBO2HHnyeZU3FwWyXJ6salNpqQdsZrgMrotuko/BdJMV8Ug==}
     engines: {node: '>= 10.13'}
     peerDependencies:
       react: '>= 16.8 || 18.0.0'
