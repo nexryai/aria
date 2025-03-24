@@ -19,7 +19,7 @@ dependencies:
     version: 13.1.1
   elysia:
     specifier: ^1.2.10
-    version: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
+    version: 1.2.10(@sinclair/typebox@0.34.31)(typescript@5.7.3)
   prisma:
     specifier: ^6.1.0
     version: 6.2.1
@@ -35,8 +35,8 @@ devDependencies:
     specifier: ^3
     version: 3.3.0
   '@eslint/js':
-    specifier: ^9.21.0
-    version: 9.21.0
+    specifier: ^9.23.0
+    version: 9.23.0
   '@playwright/test':
     specifier: ^1.49.1
     version: 1.49.1
@@ -984,7 +984,7 @@ packages:
     peerDependencies:
       elysia: '>= 1.2.0'
     dependencies:
-      elysia: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.31)(typescript@5.7.3)
     dev: true
 
   /@emotion/hash@0.8.0:
@@ -1282,8 +1282,8 @@ packages:
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
 
-  /@eslint/js@9.21.0:
-    resolution: {integrity: sha512-BqStZ3HX8Yz6LvsF5ByXYrtigrV5AXADWLAGc7PH/1SxOb7/FIYYMszZZWiUou/GB9P2lXWk2SV4d+Z8h0nknw==}
+  /@eslint/js@9.23.0:
+    resolution: {integrity: sha512-35MJ8vCPU0ZMxo7zfev2pypqTwWTofFZO6m4KAtdoFhRpLJUpHTZZ+KB3C7Hb1d7bULYwO4lJXGCi5Se+8OMbw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     dev: true
 
@@ -1839,8 +1839,8 @@ packages:
       '@peculiar/asn1-x509': 2.3.15
     dev: false
 
-  /@sinclair/typebox@0.34.29:
-    resolution: {integrity: sha512-xTzI0LlHZ0eahKuN+2R+yJbEIUyV/ZSdtqvR3sHukgN56nvCW1tz+Yr6fQ6/7+WJ34AhaU9ZmYcHXv8xgj2Lvg==}
+  /@sinclair/typebox@0.34.31:
+    resolution: {integrity: sha512-qQ71T9DsITbX3dVCrcBERbs11YuSMg3wZPnT472JhqhWGPdiLgyvihJXU8m+ADJtJvRdjATIiACJD22dEknBrQ==}
 
   /@smithy/abort-controller@4.0.1:
     resolution: {integrity: sha512-fiUIYgIgRjMWznk6iLJz35K2YxSLHzLBA/RC6lBrKfQ8fHbPfvk7Pk9UvpKoHgJjI18MnbPuEju53zcVy6KF1g==}
@@ -3262,7 +3262,7 @@ packages:
     resolution: {integrity: sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==}
     dev: true
 
-  /elysia@1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3):
+  /elysia@1.2.10(@sinclair/typebox@0.34.31)(typescript@5.7.3):
     resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.34.0'
@@ -3274,7 +3274,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@sinclair/typebox': 0.34.29
+      '@sinclair/typebox': 0.34.31
       cookie: 1.0.2
       memoirist: 0.2.0
       typescript: 5.7.3
