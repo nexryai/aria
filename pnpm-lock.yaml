@@ -19,7 +19,7 @@ dependencies:
     version: 13.1.1
   elysia:
     specifier: ^1.2.10
-    version: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
+    version: 1.2.10(@sinclair/typebox@0.34.33)(typescript@5.7.3)
   prisma:
     specifier: ^6.1.0
     version: 6.2.1
@@ -95,8 +95,8 @@ devDependencies:
     specifier: ^4.0.7
     version: 4.0.7
   tsc-alias:
-    specifier: ^1.8.10
-    version: 1.8.10
+    specifier: ^1.8.13
+    version: 1.8.13
   typescript:
     specifier: ^5
     version: 5.7.3
@@ -984,7 +984,7 @@ packages:
     peerDependencies:
       elysia: '>= 1.2.0'
     dependencies:
-      elysia: 1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3)
+      elysia: 1.2.10(@sinclair/typebox@0.34.33)(typescript@5.7.3)
     dev: true
 
   /@emotion/hash@0.8.0:
@@ -1389,7 +1389,7 @@ packages:
     engines: {node: '>= 8'}
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.19.0
+      fastq: 1.19.1
     dev: true
 
   /@paralleldrive/cuid2@2.2.2:
@@ -1839,8 +1839,8 @@ packages:
       '@peculiar/asn1-x509': 2.3.15
     dev: false
 
-  /@sinclair/typebox@0.34.29:
-    resolution: {integrity: sha512-xTzI0LlHZ0eahKuN+2R+yJbEIUyV/ZSdtqvR3sHukgN56nvCW1tz+Yr6fQ6/7+WJ34AhaU9ZmYcHXv8xgj2Lvg==}
+  /@sinclair/typebox@0.34.33:
+    resolution: {integrity: sha512-5HAV9exOMcXRUxo+9iYB5n09XxzCXnfy4VTNW4xnDv+FgjzAGY989C28BIdljKqmF+ZltUwujE3aossvcVtq6g==}
 
   /@smithy/abort-controller@4.0.1:
     resolution: {integrity: sha512-fiUIYgIgRjMWznk6iLJz35K2YxSLHzLBA/RC6lBrKfQ8fHbPfvk7Pk9UvpKoHgJjI18MnbPuEju53zcVy6KF1g==}
@@ -3262,7 +3262,7 @@ packages:
     resolution: {integrity: sha512-u1z9VuzDXV86X2r3vAns0/5ojfXBue9o0+JDUDBKYqGLjxLkSqsSUoPU/6kW0gx76V44frHaf6Zo+QF74TQCMg==}
     dev: true
 
-  /elysia@1.2.10(@sinclair/typebox@0.34.29)(typescript@5.7.3):
+  /elysia@1.2.10(@sinclair/typebox@0.34.33)(typescript@5.7.3):
     resolution: {integrity: sha512-QcNl2FjhHFRpKaqy1NoMpyCjJ7OcKBnHwLUkqGu09QwIV84PFb82ILvYJG4GS1RbGv76OA50luaqBLrM3SLZ2w==}
     peerDependencies:
       '@sinclair/typebox': '>= 0.34.0'
@@ -3274,7 +3274,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@sinclair/typebox': 0.34.29
+      '@sinclair/typebox': 0.34.33
       cookie: 1.0.2
       memoirist: 0.2.0
       typescript: 5.7.3
@@ -3709,10 +3709,10 @@ packages:
       strnum: 1.0.5
     dev: false
 
-  /fastq@1.19.0:
-    resolution: {integrity: sha512-7SFSRCNjBQIZH/xZR3iy5iQYR8aGBE0h3VG6/cwlbrpdciNYBMotQav8c1XI3HjHH+NikUpP53nPdlZSdWmFzA==}
+  /fastq@1.19.1:
+    resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
     dependencies:
-      reusify: 1.0.4
+      reusify: 1.1.0
     dev: true
 
   /file-entry-cache@8.0.0:
@@ -5474,8 +5474,8 @@ packages:
       supports-preserve-symlinks-flag: 1.0.0
     dev: true
 
-  /reusify@1.0.4:
-    resolution: {integrity: sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==}
+  /reusify@1.1.0:
+    resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
@@ -5823,8 +5823,9 @@ packages:
       typescript: 5.7.3
     dev: true
 
-  /tsc-alias@1.8.10:
-    resolution: {integrity: sha512-Ibv4KAWfFkFdKJxnWfVtdOmB0Zi1RJVxcbPGiCDsFpCQSsmpWyuzHG3rQyI5YkobWwxFPEyQfu1hdo4qLG2zPw==}
+  /tsc-alias@1.8.13:
+    resolution: {integrity: sha512-hpuglrm2DoHZE62L8ntYqRNiSQ7J8kvIxEsajzY/QfGOm7EcdhgG5asqoWYi2E2KX0SqUuhOTnV8Ry8D/TnsEA==}
+    engines: {node: '>=16.20.2'}
     hasBin: true
     dependencies:
       chokidar: 3.6.0
